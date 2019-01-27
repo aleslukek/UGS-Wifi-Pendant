@@ -34,8 +34,8 @@ const String webserverport = "8080";
 
 // Language //
 // Uncomment language you want and comment the unwanted one
-//#define LanguageEnglish
-#define LanguageSlovenian
+#define LanguageEnglish
+//#define LanguageSlovenian
 
 
 //if you encounter errors when compiling use libraries located in libraries folder and move them to arduino libraries folder
