@@ -49,36 +49,36 @@ const String webserverport = "8080";
  * D2 - SDA
  */
 
- //D3 - led for laser mode status (on if lasermode is on)
- //D5 - led for speed mode status (on if slow)
+//D3 - led for laser mode status (on if lasermode is on)
+//D5 - led for speed mode status (on if slow)
 
 
- /*
-PCB buttons
+/*
+   PCB buttons
 
-    button[0] - Homing / Probe
-    button[1] - Reset XYZ / Reset Z zero
-    button[2] - Shift, if slow toggle is 1, and laser mode is 1 shift turns on laser test
-    button[3] - Pause-Resume / Laser mode (toggle laser mode if enableLaserMode is enabled) OR toggle Check mode
-    button[4] - Cancel (or $X on idle) / Soft reset + $X
-    button[5] - Y-
-    button[6] - Y+
-    button[7] - X-
-    button[8] - X+
-    button[9] - Z-
-    button[10] - Z+
-    button[11] - slow/fast toggle for jogging
-    button[12] - N/A
-    button[13] - N/A
-    button[14] - N/A
-    button[15] - PC1, PC2 toggle
-  */
+   button[0] - Homing / Probe
+   button[1] - Reset XYZ / Reset Z zero
+   button[2] - Shift, if slow toggle is 1, and laser mode is 1 shift turns on laser test
+   button[3] - Pause-Resume / Laser mode (toggle laser mode if enableLaserMode is enabled) OR toggle Check mode
+   button[4] - Cancel (or $X on idle) / Soft reset + $X
+   button[5] - Y-
+   button[6] - Y+
+   button[7] - X-
+   button[8] - X+
+   button[9] - Z-
+   button[10] - Z+
+   button[11] - slow/fast toggle for jogging
+   button[12] - N/A
+   button[13] - N/A
+   button[14] - N/A
+   button[15] - PC1, PC2 toggle
+ */
 
 #define  pendatVersion  1.0
 
 
 /*
-To do: fix soft reset when universal gcode sender starts supporting this
+   To do: fix soft reset when universal gcode sender starts supporting this
 
 
-*/
+ */

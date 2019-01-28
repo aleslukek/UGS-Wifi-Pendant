@@ -3,7 +3,7 @@
 //Slovenian language
 #ifdef LanguageSlovenian
       #define      lcdLanguage                    "Slovenian"
-      //LCD Message should only be 16 chars long: "1234567890123456"
+//LCD Message should only be 16 chars long: "1234567890123456"
       #define      lcdMsgConnecting               "  Povezujem..."
       #define      lcdMsgConnected                "    Povezan!"
       #define      lcdMsgZeroing                  "  Iscem niclo"
@@ -80,7 +80,7 @@
 
 #ifdef LanguageEnglish
       #define      lcdLanguage                    "English"
-      //LCD Message should only be 16 chars long: "1234567890123456"
+//LCD Message should only be 16 chars long: "1234567890123456"
       #define      lcdMsgConnecting               " Connecting..."
       #define      lcdMsgConnected                "   Connected!"
       #define      lcdMsgZeroing                  "    Zeroing"

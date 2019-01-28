@@ -8,8 +8,8 @@
 LiquidCrystal_I2C lcd(0x3F, 16, 2);
 #define resetPinD5 16 //D0
 
- #define ledLaser 0 //D3 - led for laser mode status (on if lasermode is on)
- #define ledSlow  14//D5 - led for speed mode status (on if slow)
+#define ledLaser 0 //D3 - led for laser mode status (on if lasermode is on)
+#define ledSlow  14//D5 - led for speed mode status (on if slow)
 
 
 bool justSentGeneral = 0;

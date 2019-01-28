@@ -115,10 +115,10 @@ void parseString(String pendantPayload){
                 }
                 if(newvar == 1 && ((StringToChar[i] > 47 && StringToChar[i] < 58) || (StringToChar[i] > 65 && StringToChar[i] < 91) || (StringToChar[i] > 96 && StringToChar[i] < 123) || StringToChar[i] == 45 || StringToChar[i] == 46 || StringToChar[i] == 95 || StringToChar[i] == 43 || StringToChar[i] == 40 || StringToChar[i] == 41 || (j == 1 && StringToChar[i] == 32)) && StringToChar[i] != 125 && StringToChar[i] != 123) {//save only small caps, high caps, +, -, . (, )
                         //save var to array
-                        if(j == 1 && skippedLatestComment == 1){ //skip
+                        if(j == 1 && skippedLatestComment == 1) { //skip
 
                         }else{ //save
-                          variable[j][k] = StringToChar[i];
+                                variable[j][k] = StringToChar[i];
                         }
                         k++;
                         if(k >= varLength - 1) {
@@ -414,4 +414,17 @@ void serialPrintInfo(){ //Prints some general info on startup
         Serial.println();
         Serial.println("=======================================================================");
         Serial.println();
+}
+
+
+
+
+//=======================================================================
+//                    Physical pin for reset on output D5 (14)
+//=======================================================================
+void physicalReset(){ //Puts D5 that should be connected to GRBL reset/abort pin to low to reset grbl
+        digitalWrite(resetPinD5, LOW);
+        delay(10);
+        digitalWrite(resetPinD5, HIGH);
+        return;
 }

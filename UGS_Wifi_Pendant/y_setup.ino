@@ -7,7 +7,7 @@ void setup() {
         lcd.init();          // Should match the number provided to the constructor.
         lcd.backlight();     // Turn on the backlight.
         lcdBacklightStatus = 1;
-        if(enableSerialOutput == true){ //this will disable serial if not enabled
+        if(enableSerialOutput == true) { //this will disable serial if not enabled
                 Serial.begin(115200);
         }
         WiFi.mode(WIFI_OFF); //Prevents reconnection issue (taking too long to connect)
@@ -17,7 +17,7 @@ void setup() {
 
         WiFi.begin(ssid, password); //Connect to your WiFi router
         Serial.println("");
-        if(enableResetPhyPin == true){
+        if(enableResetPhyPin == true) {
                 pinMode(resetPinD5, OUTPUT);
         }
         digitalWrite(resetPinD5, HIGH);

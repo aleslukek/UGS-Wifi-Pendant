@@ -86,27 +86,27 @@ void getCommandGeneral(String getCommand){
                 int httpCode = http.GET();
                 String payload = http.getString();         //Get the response payload
                 //Serial.println(payload);    //Print request response payload
-                if(laserMode == 1){ //for some reason it works if you move G1 for a bit and then M3 and M5 works even when not moving
-                  getFull = "http://" + webserver + ":" + webserverport + GETlaserTestPower;
-                  http.begin(getFull);
-                  httpCode = http.GET();
-                  delay(100);
-                  getFull = "http://" + webserver + ":" + webserverport + GETlaserTestOff;
-                  http.begin(getFull);
-                  httpCode = http.GET();
-                  delay(100);
-                  getFull = "http://" + webserver + ":" + webserverport + GETmoveLeftABit;
-                  http.begin(getFull);
-                  httpCode = http.GET();
-                  delay(200);
-                  getFull = "http://" + webserver + ":" + webserverport + GETmoveRightABit;
-                  http.begin(getFull);
-                  httpCode = http.GET();
-                }else if(laserMode == 0){
-                  delay(100);
-                  getFull = "http://" + webserver + ":" + webserverport + GETlaserTestOff;
-                  http.begin(getFull);
-                  httpCode = http.GET();
+                if(laserMode == 1) { //for some reason it works if you move G1 for a bit and then M3 and M5 works even when not moving
+                        getFull = "http://" + webserver + ":" + webserverport + GETlaserTestPower;
+                        http.begin(getFull);
+                        httpCode = http.GET();
+                        delay(100);
+                        getFull = "http://" + webserver + ":" + webserverport + GETlaserTestOff;
+                        http.begin(getFull);
+                        httpCode = http.GET();
+                        delay(100);
+                        getFull = "http://" + webserver + ":" + webserverport + GETmoveLeftABit;
+                        http.begin(getFull);
+                        httpCode = http.GET();
+                        delay(200);
+                        getFull = "http://" + webserver + ":" + webserverport + GETmoveRightABit;
+                        http.begin(getFull);
+                        httpCode = http.GET();
+                }else if(laserMode == 0) {
+                        delay(100);
+                        getFull = "http://" + webserver + ":" + webserverport + GETlaserTestOff;
+                        http.begin(getFull);
+                        httpCode = http.GET();
                 }
                 http.end();         //Close connection
                 timer1 = millis();
@@ -226,9 +226,9 @@ void zAxisProbe(){
                 delay(500);
                 //G92 Z2.0 -> reset z height, for probe plate height (2mm)
                 String getFull = "http://" + webserver + ":" + webserverport + "/sendGcode/?gCode=G92%20Z";
-                if(laserMode == 0){
+                if(laserMode == 0) {
                         getFull = getFull + drillProbeHeight; //different probe height offset for drilling
-                }else if(laserMode == 1){
+                }else if(laserMode == 1) {
                         getFull = getFull + laserProbeHeight; //different probe height offset for laser
                 }
                 http.begin(getFull);
@@ -306,18 +306,5 @@ void readUGSPendant(){
                 parseString(payload);
         }
         http.end(); //Close connection
-        return;
-}
-
-
-
-
-//=======================================================================
-//                    Physical pin for reset on output D5 (14)
-//=======================================================================
-void physicalReset(){ //Puts D5 that should be connected to GRBL reset/abort pin to low to reset grbl
-        digitalWrite(resetPinD5, LOW);
-        delay(10);
-        digitalWrite(resetPinD5, HIGH);
         return;
 }

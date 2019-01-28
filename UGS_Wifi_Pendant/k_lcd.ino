@@ -356,39 +356,51 @@ void displayLCD(){
                                                 lcd.setCursor(0, 1);
                                                 lcd.print(lcdMsgCantTell);
                                         }else{
-                                                lcd.setCursor(5,1);
-                                                lcd.print(hours);
                                                 if(hours < 10) {
                                                         lcd.setCursor(5,1);
                                                         lcd.print("0");
                                                         if(hours == 0) {
                                                                 lcd.setCursor(6,1);
                                                                 lcd.print("0");
+                                                        }else{
+                                                                lcd.setCursor(6,1);
+                                                                lcd.print(hours);
                                                         }
+                                                }else{
+                                                        lcd.setCursor(5,1);
+                                                        lcd.print(hours);
                                                 }
                                                 lcd.setCursor(7,1);
                                                 lcd.print(":");
-                                                lcd.setCursor(8,1);
-                                                lcd.print(minutes);
                                                 if(minutes < 10) {
                                                         lcd.setCursor(8,1);
                                                         lcd.print("0");
                                                         if(minutes == 0) {
                                                                 lcd.setCursor(9,1);
                                                                 lcd.print("0");
+                                                        }else{
+                                                                lcd.setCursor(9,1);
+                                                                lcd.print(minutes);
                                                         }
+                                                }else{
+                                                        lcd.setCursor(8,1);
+                                                        lcd.print(minutes);
                                                 }
                                                 lcd.setCursor(10,1);
                                                 lcd.print(":");
-                                                lcd.setCursor(11,1);
-                                                lcd.print(seconds);
                                                 if(seconds < 10) {
                                                         lcd.setCursor(11,1);
                                                         lcd.print("0");
                                                         if(seconds == 0) {
                                                                 lcd.setCursor(12,1);
                                                                 lcd.print("0");
+                                                        }else{
+                                                                lcd.setCursor(12,1);
+                                                                lcd.print(seconds);
                                                         }
+                                                }else{
+                                                        lcd.setCursor(11,1);
+                                                        lcd.print(seconds);
                                                 }
                                         }
 

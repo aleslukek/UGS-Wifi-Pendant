@@ -118,7 +118,7 @@ void buttons(){
                                 displayLCD();
                                 if(cnc_state[8] == 0) { //if no hard limit alarm reset is same as $C twice do that
                                         getCommandGeneral(GETsoftreset);//run soft reset twice (toggle check mode twice resets the grbl)
-                                }else if(cnc_state[8] == 1 && cnc_state[5] != 1 && cnc_state[3] == 1 && enableResetPhyPin == true){ //if hard limit is triggered, job not running and arduino is available
+                                }else if(cnc_state[8] == 1 && cnc_state[5] != 1 && cnc_state[3] == 1 && enableResetPhyPin == true) { //if hard limit is triggered, job not running and arduino is available
                                         physicalReset(); //D5 to low that resets grbl reset physical pin
                                         delay(1000);
                                         getCommandGeneral(GETdisablealarmlock);
