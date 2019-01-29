@@ -39,9 +39,9 @@ bool cnc_state[15] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
    CNC_State index:
    0 - esp wifi not connected
-   1 - rpi not available
-   2 - rpi available ugs or pendant not running
-   3 - rpi available, ugs available, arduino (cnc) connected to rpi via serial
+   1 - PC not available
+   2 - PC available ugs or pendant not running
+   3 - PC available, ugs available, arduino (cnc) connected to PC via serial
    4 - CNC is idle
    5 - CNC job is running
    6 - CNC job is on hold
@@ -85,7 +85,7 @@ unsigned int oldButtonValues;
    button[12] - N/A
    button[13] - N/A
    button[14] - N/A
-   button[15] - Rpi, Laptop toggle
+   button[15] - PC 1, PC 2 toggle
  */
 
 // How many shift register chips are daisy-chained.

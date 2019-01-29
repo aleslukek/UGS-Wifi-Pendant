@@ -38,9 +38,9 @@ void setup() {
         lcd.print(lcdMsgConnecting);
         lcd.setCursor(5, 1);
         if(button[15] == 0) {
-                lcd.print("(Air)");
+                lcd.print("(PC1)");
         }else if(button[15] == 1) {
-                lcd.print("(RPi)");
+                lcd.print("(PC2)");
         }
         // Wait for connection
         while (WiFi.status() != WL_CONNECTED) {
@@ -60,14 +60,14 @@ void setup() {
         timer2 = millis();
         timer3 = millis();
         if(button[15] == 0) {
-                Serial.println("Searching for laptop (button not pressed).");
+                Serial.println("Searching for PC1 (button not pressed).");
         }else{
-                Serial.println("Searching for RPi (button pressed).");
+                Serial.println("Searching for PC2 (button pressed).");
         }
         if(button[15] == 0) {
-                cnc_state[1] = Ping.ping(webserver1, 1);//check if rpi is available
+                cnc_state[1] = Ping.ping(webserver1, 1);//check if PC 1 is available
         }else if(button[15] == 1) {
-                cnc_state[1] = Ping.ping(webserver2, 1);//check if rpi is available
+                cnc_state[1] = Ping.ping(webserver2, 1);//check if PC 2 is available
         }
         digitalWrite(ledSlow, LOW);
         digitalWrite(ledLaser, LOW);

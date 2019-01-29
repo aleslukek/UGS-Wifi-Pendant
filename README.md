@@ -106,6 +106,8 @@ Then you'll have to set some things up, really simply. You don't need to change 
 * If you encounter errors when compiling use libraries located in libraries folder and move them to arduino libraries folder
 
 
+* This code checks for buttons state and button logic more than 1000 times per second. When state of any button changes it sends a request. It is done fairly quickly and I haven't encountered any lags or delays. LCD is updated almost every half a second or so. So everything works quite tightly.
+
 
 # Connections
  * 3V - LCD VCC

@@ -43,9 +43,9 @@ void reConnectToWifi(){
         Serial.println(WiFi.localIP()); //IP address assigned to your ESP
         cnc_state[0] = 0;
         if(button[15] == 0) {
-                cnc_state[1] = Ping.ping(webserver1, 1);//check if laptop is available
+                cnc_state[1] = Ping.ping(webserver1, 1);//check if PC 1 is available
         }else if(button[15] == 1) {
-                cnc_state[1] = Ping.ping(webserver2, 1);//check if rpi is available
+                cnc_state[1] = Ping.ping(webserver2, 1);//check if PC 2 is available
         }
 
 }
@@ -268,20 +268,20 @@ void readUGSPendant(){
                 if(cnc_state[0] == 1) {
                         cnc_state[0] = pingWebsite();//if 0 ping is successful, if 1 ping failed
                 }
-                if(cnc_state[0] == 0) {//if there is internet connection, check if RPi is available
-                        bool result;//check if rpi is available
+                if(cnc_state[0] == 0) {//if there is internet connection, check if PC 2 is available
+                        bool result;//check if PC 2 is available
                         if(button[15] == 0) {
-                                result = Ping.ping(webserver1, 1);//check if rpi is available
+                                result = Ping.ping(webserver1, 1);//check if PC 2 is available
                         }else if(button[15] == 1) {
-                                result = Ping.ping(webserver2, 1);//check if rpi is available
+                                result = Ping.ping(webserver2, 1);//check if PC 2 is available
                         }
                         if(result == 1) {//it is available - so UGS (and or wifi pendant) is not running
                                 cnc_state[0] = 0;
                                 cnc_state[1] = 0;
-                                cnc_state[2] = 1;//rpi is available, but ugs or pendant are not
-                        }else{//rpi is not available
+                                cnc_state[2] = 1;//PC 2 is available, but ugs or pendant are not
+                        }else{//PC 2 is not available
                                 cnc_state[0] = 0;
-                                cnc_state[1] = 1;//rpi is not available
+                                cnc_state[1] = 1;//PC 2 is not available
                                 cnc_state[2] = 0;
                         }
                 }else{//ESP doesn't have internet connection

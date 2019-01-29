@@ -27,9 +27,9 @@ void maintanance(){
         }
 
         if(button[15] == 0) {
-                webserver = webserver1;//check if laptop is available
+                webserver = webserver1;//check if PC 1 is available
         }else if(button[15] == 1) {
-                webserver = webserver2;//check if rpi is available
+                webserver = webserver2;//check if PC 2 is available
         }
 
         if(disableAlarmLockLogic == 1 && cnc_state[4] == 1 && autoResetStartupAlarm == true) { //run $X on first connect if idle, and if autoResetStartupAlarm is true
