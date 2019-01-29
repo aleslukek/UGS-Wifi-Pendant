@@ -23,9 +23,9 @@ const String webserverport = "8080";
 #define drillProbeHeight 2 //Height of a probe (mm) - Default value: 2 mm
 #define enableLaserMode true //if true, this will enable toggling laser mode
 #define laserProbeHeight 0 //If you probe Z axis while in laser mode, you might use the different probe (for set laser height). This is offset of this probe height. Default value: 0 mm
-#define skipGetDelay 100 //when button is pressed, no other button will register after skipGetDelay milliseconds - Default value: 50 ms
+#define skipGetDelay 50 //when button is pressed, no other button will register after skipGetDelay milliseconds - Default value: 50 ms
 #define skipMsgDelay 1000 //when button is pressed, display what happened and after skipMsgDelay milliseconds display status - Default value: 1000
-#define turnBacklightDelay 600000 //turn of backlight after this many milliseconds of inactivity - Default value: 600000 ms
+#define turnBacklightDelay 600000 //turn off LCD backlight after this many milliseconds of inactivity - Default value: 600000 ms
 #define jumpSign 5000 //jump sign after 5000 ms (cycling data when idle or running) - Default value: 5000 ms
 #define autoResetAlarm false //if you want for pendant to automatically send $X when idle and alarm was triggered (not Hard Limit alarm) set true, else it will not - Default value: false
 #define autoResetStartupAlarm true //automatically send $X on startup to remove general alarm - Default value: true
@@ -44,7 +44,7 @@ const String webserverport = "8080";
 
 /*  LCD connections
  * 3V - VCC
- * GND - GET
+ * GND - GND
  * D1 - SCL
  * D2 - SDA
  */
