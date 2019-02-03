@@ -74,8 +74,6 @@ const String webserverport = "8080";
    button[15] - PC1, PC2 toggle
  */
 
-#define  pendatVersion  1.0
-
 
 /*
    To do: fix soft reset when universal gcode sender starts supporting this

@@ -156,12 +156,12 @@ void buttons(){
 //=======================================================================
 void directionButtons(){
         if(cnc_state[0] == 0 && cnc_state[1] == 0 && cnc_state[2] == 0 && cnc_state[3] == 1) { //if CNC is available, then listen to the buttons
-                if(button[5] == 1 && directionStatusY == 0 && button[11] == 0) {//button pushed, move it: Y negative, quickly
+                if(button[5] == 1 && directionStatusY == 0 && button[11] == 0 && button[2] == 0) {//button pushed, move it: Y negative, quickly
                         directionStatusY = 1;
                         getDirection(0, -1, 0, 0);
                         buttonPressMsg = 108;
                         return;
-                }else if(button[5] == 1 && directionStatusY == 0 && button[11] == 1) {//button pushed, move it: Y negative, slowly
+                }else if(button[5] == 1 && directionStatusY == 0 && button[11] == 1 && button[2] == 0) {//button pushed, move it: Y negative, slowly
                         directionStatusY = 1;
                         getDirection(0, -1, 0, 1);
                         buttonPressMsg = 109;
@@ -170,12 +170,12 @@ void directionButtons(){
                         directionStatusY = 0;
                         getCommandGeneral(GETcancel);
                         return;
-                }else if(button[6] == 1 && directionStatusY == 0 && button[11] == 0) {//button pushed, move it: Y positive, quickly
+                }else if(button[6] == 1 && directionStatusY == 0 && button[11] == 0 && button[2] == 0) {//button pushed, move it: Y positive, quickly
                         directionStatusY = 1;
                         getDirection(0, 1, 0, 0);
                         buttonPressMsg = 110;
                         return;
-                }else if(button[6] == 1 && directionStatusY == 0 && button[11] == 1) {//button pushed, move it: Y positive, slowly
+                }else if(button[6] == 1 && directionStatusY == 0 && button[11] == 1 && button[2] == 0) {//button pushed, move it: Y positive, slowly
                         directionStatusY = 1;
                         getDirection(0, 1, 0, 1);
                         buttonPressMsg = 111;
@@ -184,12 +184,12 @@ void directionButtons(){
                         directionStatusY = 0;
                         getCommandGeneral(GETcancel);
                         return;
-                }else if(button[7] == 1 && directionStatusX == 0 && button[11] == 0) {//button pushed, move it: X negative, quickly
+                }else if(button[7] == 1 && directionStatusX == 0 && button[11] == 0 && button[2] == 0) {//button pushed, move it: X negative, quickly
                         directionStatusX = 1;
                         getDirection(-1, 0, 0, 0);
                         buttonPressMsg = 112;
                         return;
-                }else if(button[7] == 1 && directionStatusX == 0 && button[11] == 1) {//button pushed, move it: X negative, slowly
+                }else if(button[7] == 1 && directionStatusX == 0 && button[11] == 1 && button[2] == 0) {//button pushed, move it: X negative, slowly
                         directionStatusX = 1;
                         getDirection(-1, 0, 0, 1);
                         buttonPressMsg = 113;
@@ -198,12 +198,12 @@ void directionButtons(){
                         directionStatusX = 0;
                         getCommandGeneral(GETcancel);
                         return;
-                }else if(button[8] == 1 && directionStatusX == 0 && button[11] == 0) {//button pushed, move it: X positive, quickly
+                }else if(button[8] == 1 && directionStatusX == 0 && button[11] == 0 && button[2] == 0) {//button pushed, move it: X positive, quickly
                         directionStatusX = 1;
                         getDirection(1, 0, 0, 0);
                         buttonPressMsg = 114;
                         return;
-                }else if(button[8] == 1 && directionStatusX == 0 && button[11] == 1) {//button pushed, move it: Y positive, slowly
+                }else if(button[8] == 1 && directionStatusX == 0 && button[11] == 1 && button[2] == 0) {//button pushed, move it: Y positive, slowly
                         directionStatusX = 1;
                         getDirection(1, 0, 0, 1);
                         buttonPressMsg = 115;
@@ -212,12 +212,12 @@ void directionButtons(){
                         directionStatusX = 0;
                         getCommandGeneral(GETcancel);
                         return;
-                }else if(button[9] == 1 && directionStatusZ == 0 && button[11] == 0) {//button pushed, move it: X negative, quickly
+                }else if(button[9] == 1 && directionStatusZ == 0 && button[11] == 0 && button[2] == 0) {//button pushed, move it: X negative, quickly
                         directionStatusZ = 1;
                         getDirection(0, 0, -1, 0);
                         buttonPressMsg = 116;
                         return;
-                }else if(button[9] == 1 && directionStatusZ == 0 && button[11] == 1) {//button pushed, move it: X negative, slowly
+                }else if(button[9] == 1 && directionStatusZ == 0 && button[11] == 1 && button[2] == 0) {//button pushed, move it: X negative, slowly
                         directionStatusZ = 1;
                         getDirection(0, 0, -1, 1);
                         buttonPressMsg = 117;
@@ -226,15 +226,31 @@ void directionButtons(){
                         directionStatusZ = 0;
                         getCommandGeneral(GETcancel);
                         return;
-                }else if(button[10] == 1 && directionStatusZ == 0 && button[11] == 0) {//button pushed, move it: X positive, quickly
+                }else if(button[10] == 1 && directionStatusZ == 0 && button[11] == 0 && button[2] == 0) {//button pushed, move it: X positive, quickly
                         directionStatusZ = 1;
                         getDirection(0, 0, 1, 0);
                         buttonPressMsg = 118;
                         return;
-                }else if(button[10] == 1 && directionStatusZ == 0 && button[11] == 1) {//button pushed, move it: Y positive, slowly
+                }else if(button[10] == 1 && directionStatusZ == 0 && button[11] == 1 && button[2] == 0) {//button pushed, move it: Y positive, slowly
                         directionStatusZ = 1;
                         getDirection(0, 0, 1, 1);
                         buttonPressMsg = 119;
+                        return;
+                }else if((button[5] == 1 || button[6] == 1 || button[7] == 1 || button[8] == 1) && button[9] == 0 && button[10] == 0 && button[2] == 1 && button[11] == 0) { //move to XY zero GETmoveToZeroXYquickly: any X or any Y PLUS Shift and no slow toggle
+                        getCommandGeneral(GETmoveToZeroXYquickly);
+                        buttonPressMsg = 10;
+                        return;
+                }else if((button[5] == 1 || button[6] == 1 || button[7] == 1 || button[8] == 1) && button[9] == 0 && button[10] == 0 && button[2] == 1 && button[11] == 1) { //move to XY zero GETmoveToZeroXYslowly: any X or any Y PLUS Shift PLUS slow toggle
+                        getCommandGeneral(GETmoveToZeroXYslowly);
+                        buttonPressMsg = 11;
+                        return;
+                }else if(button[5] == 0 && button[6] == 0 && button[7] == 0 && button[8] == 0 && (button[9] == 1 || button[10] == 1) && button[2] == 1 && button[11] == 0) { //move to XY zero GETmoveToZeroZquickly: any Z PLUS Shift and no slow toggle
+                        getCommandGeneral(GETmoveToZeroZquickly);
+                        buttonPressMsg = 12;
+                        return;
+                }else if(button[5] == 0 && button[6] == 0 && button[7] == 0 && button[8] == 0 && (button[9] == 1 || button[10] == 1) && button[2] == 1 && button[11] == 1) { //move to XY zero GETmoveToZeroZquickly: any Z PLUS Shift with slow toggle
+                        getCommandGeneral(GETmoveToZeroZslowly);
+                        buttonPressMsg = 13;
                         return;
                 }else if(button[10] == 0 && directionStatusZ == 1) {//button depressed, stop it!
                         directionStatusZ = 0;

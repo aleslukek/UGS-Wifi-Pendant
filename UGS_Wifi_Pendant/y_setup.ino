@@ -36,11 +36,15 @@ void setup() {
         Serial.print("Connecting");
         lcd.setCursor(0, 0);
         lcd.print(lcdMsgConnecting);
-        lcd.setCursor(5, 1);
+        lcd.setCursor(0, 1);
         if(button[15] == 0) {
-                lcd.print("(PC1)");
+                lcd.print("( ");
+                lcd.print(controler1Name);
+                lcd.print(" )");
         }else if(button[15] == 1) {
-                lcd.print("(PC2)");
+                lcd.print("( ");
+                lcd.print(controler2Name);
+                lcd.print(" )");
         }
         // Wait for connection
         while (WiFi.status() != WL_CONNECTED) {

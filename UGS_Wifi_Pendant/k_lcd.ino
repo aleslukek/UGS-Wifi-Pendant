@@ -71,6 +71,32 @@ void displayLCD(){
                         lcd.setCursor(0, 0);
                         lcd.print(lcdMsgStartaJob);
                         buttonPressMsg = 255;
+                }else if(buttonPressMsg == 10){
+                        Serial.println("Return to XY zero (quickly)");
+                        lcd.clear();
+                        lcd.setCursor(0, 0);
+                        lcd.print(lcdMsgReturnToXYzero);
+                        buttonPressMsg = 255;
+                }else if(buttonPressMsg == 11){
+                        Serial.println("Return to XY zero (slowly)");
+                        lcd.clear();
+                        lcd.setCursor(0, 0);
+                        lcd.print(lcdMsgReturnToXYzero);
+                        lcd.setCursor(0, 1);
+                        lcd.print(lcdMsgReturnToXYzero1);
+                        buttonPressMsg = 255;
+                }else if(buttonPressMsg == 12){
+                        Serial.println("Return to Z zero (quickly)");
+                        lcd.clear();
+                        lcd.setCursor(0, 0);
+                        lcd.print(lcdMsgReturnToZzero);
+                        buttonPressMsg = 255;
+                }else if(buttonPressMsg == 13){
+                        Serial.println("Return to Z zero (slowly)");
+                        lcd.clear();
+                        lcd.setCursor(0, 0);
+                        lcd.print(lcdMsgReturnToZzero);
+                        buttonPressMsg = 255;
                 }else if(buttonPressMsg == 108) {
                         Serial.println("Move Y-");
                         lcd.clear();
@@ -195,7 +221,7 @@ void displayLCD(){
                         lcd.print(lcdMsgNoConn);
                         lcd.setCursor(0, 1);
                         lcd.print(lcdMsgToInternet);
-                }else if(cnc_state[0] == 0 && cnc_state[1] == 1 && cnc_state[2] == 0 && cnc_state[3] == 0) {//PC 2 not available
+                }else if(cnc_state[0] == 0 && cnc_state[1] == 1 && cnc_state[2] == 0 && cnc_state[3] == 0) {//PC not available
                         lcd.clear();
                         if(button[15] == 0) {
                                 lcd.setCursor(0,0);
@@ -208,21 +234,21 @@ void displayLCD(){
                         }
                         lcd.setCursor(0, 1);
                         lcd.print(lcdMsgNAvailable);
-                }else if(cnc_state[0] == 0 && cnc_state[1] == 0 && cnc_state[2] == 1 && cnc_state[3] == 0) {//PC 2 available, ugs or pendant not running
+                }else if(cnc_state[0] == 0 && cnc_state[1] == 0 && cnc_state[2] == 1 && cnc_state[3] == 0) {//PC available, ugs or pendant not running
                         Serial.println("Turn on pendant or UGS.");
                         lcd.clear();
                         lcd.setCursor(0, 0);
                         lcd.print(lcdMsgTurnOnUGS);
                         lcd.setCursor(0, 1);
                         lcd.print(lcdMsgEnablePendant);
-                }else if(cnc_state[0] == 0 && cnc_state[1] == 0 && cnc_state[2] == 0 && cnc_state[3] == 0) {//PC 2 available, ugs and pendant available, cnc not connected
+                }else if(cnc_state[0] == 0 && cnc_state[1] == 0 && cnc_state[2] == 0 && cnc_state[3] == 0) {//PC available, ugs and pendant available, cnc not connected
                         Serial.println("CNC is not connected to the computer");
                         lcd.clear();
                         lcd.setCursor(0, 0);
                         lcd.print(lcdMsgCNCNotConnected);
                         lcd.setCursor(0, 1);
                         lcd.print(lcdMsgToComputer);
-                }else if(cnc_state[0] == 0 && cnc_state[1] == 0 && cnc_state[2] == 0 && cnc_state[3] == 1) {//PC 2 available, ugs available, arduino (cnc) connected to PC 2 via serial
+                }else if(cnc_state[0] == 0 && cnc_state[1] == 0 && cnc_state[2] == 0 && cnc_state[3] == 1) {//PC available, ugs available, arduino (cnc) connected to PC via serial
                         if(cnc_state[4] == 1 && cnc_state[5] == 0 && cnc_state[6] == 0 && cnc_state[7] == 0 && (cnc_state[8] == 1 || cnc_state[9] == 1)) {//Alarms - general or hard limit
                                 if(cnc_state[8] == 1) {
                                         Serial.println("Hard Limit Alarm triggered");

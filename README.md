@@ -1,9 +1,9 @@
 # UGS-Wifi-Pendant
-This is an addon for an Universal Gcode sender. It enables a bit more complicated control of your CNC as well as LCD output of useful info.
+This is an addon for an [Universal Gcode Sender] (https://github.com/winder/Universal-G-Code-Sender). It enables a bit more complicated control of your CNC as well as LCD output of useful info.
 
 
 ## What it does?
-It takes buttons input and translates it to web requests that commands UGS via it's wifi pendant. You can move CNC (x, y z), slow move, start home cycle, z probe, reset XYZ zero, reset Z zero, pause, start job, cancel, toggle laser mode, soft reset (not fully working yet, will get around to fix this), toggle source computer.
+It takes buttons input and translates it to web requests that commands UGS via it's wifi pendant. You can move CNC (x, y z), slow move, start home cycle, z probe, reset XYZ zero, reset Z zero, return to XY zero, return to Z zero, pause, start job, cancel, toggle laser mode, soft reset (not fully working yet, will get around to fix this), toggle source computer.
 
 It uses LCD to output CNC data, such as machine position, work position, job duration, job time remaining, job sent rows, total rows, progress, file selected, errors and things like that.
 
@@ -38,7 +38,9 @@ When job is running most of the buttons are disabled. Only pause, cancel and tog
 * Button 2 + Button 3 (shift + pause) toggles laser mode $32=1 and $32=0. This pendant is unaware of current CNC laser mode. So if you press those two buttons even if laser mode is on it will turn it on not off. And vice versa. When laser mode is on led 1 is on.
 * Button 4 cancels running job or jog, but acts as $X when idle. Soft reset currently doesn't work if hard limit switches are triggered. This is UGS problem that needs addressing not mine.
 Button 11 is as toggle. When not pressed CNC jogs with higher feed rate. When toggle is pressed, led 2 turns on and jogging is slower.
-* When laser mode is on ($32=1) and slow toggle is also on (so both leds are on) button 2 acts as laser test fire. It fires laser at slowest power. Be aware that if you have spindle connected to Spindle enable pin on grbl arduino it will turn on your spindle. That might be much more dangerous than laser on lowest power. But lasers are dangerous as well, don't get me wrong. USE AT YOUR OWN RISK!
+* Button 2 + any X/Y button returns to XY work zero (G0 X0 Y0). This action observes slow/quick toggle and acts accordingly.
+* Button 2 + any Z button returns to Z work zero (G0 Z0). This action observes slow/quick toggle and acts accordingly.
+* When laser mode is on ($32=1) and slow toggle is also on (so both LEDs are on) button 2 acts as laser test fire. It fires laser at slowest power. Be aware that if you have spindle connected to Spindle enable pin on grbl Arduino it will turn on your spindle. That might be much more dangerous than laser on lowest power. But lasers are dangerous as well, don't get me wrong. USE AT YOUR OWN RISK!
 
 
 
@@ -81,7 +83,7 @@ Then you'll have to set some things up, really simply. You don't need to change 
 
 #### Personal settings that make anything working better.
          xyStepSizeFast 800  - x and y step size for quick jog. Might be as long as you want.
-         xyStepRateFast 5000 - x and y feed rate for qucik jog
+         xyStepRateFast 5000 - x and y feed rate for quick jog
          xyStepSizeSlow 200 - x and y step size for slow jog
          xyStepRateSlow 500 - x and y feed rate for slow jog
          probeStep 20 - probing Z axis step size
@@ -95,7 +97,7 @@ Then you'll have to set some things up, really simply. You don't need to change 
          jumpSign 5000 - jump sign after 5000 ms (cycling data when idle or running)
          autoResetAlarm false - if you want for pendant to automatically send $X when idle and alarm was triggered (not Hard Limit alarm) set true, else it will not
          autoResetStartupAlarm true - automatically send $X on startup to remove general alarm
-         enableSerialOutput true - Enables serial output. For debugging purpuses. Disable if not needed. Will make code run a small bit faster.
+         enableSerialOutput true - Enables serial output. For debugging purposes. Disable if not needed. Will make code run a small bit faster.
 
 
 * LCD language. Uncomment the wanted one and comment the unwanted one. Currently English and Slovenian. If you'd like to contribute or change, language is in file e_lcd_lang.ino
@@ -114,7 +116,7 @@ Then you'll have to set some things up, really simply. You don't need to change 
  * GND - LCD GND
  * D1 - LCD SCL
  * D2 - LCD SDA
- * D3 - led for laser mode status (on if lasermode is on)
+ * D3 - led for laser mode status (on if laser mode is on)
  * D5 - led for speed mode status (on if slow)
 
 Please refer to schematic in schematic folder for if you'd like to make a PCB for it. I made it, trust me, it is worth it. Soldering this is a path you don't want to go to. I used https://easyeda.com to design the schematic (you can easily import it in easyeda. I haven't tested other schematic apps) and pcb and https://jlcpcb.com/ to manufacture 10 pieces for 2 USD + shipping.
