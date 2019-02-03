@@ -1,5 +1,5 @@
 # UGS-Wifi-Pendant
-This is an addon for an [Universal Gcode Sender] (https://github.com/winder/Universal-G-Code-Sender). It enables a bit more complicated control of your CNC as well as LCD output of useful info.
+This is an addon for an [Universal Gcode Sender](https://github.com/winder/Universal-G-Code-Sender). It enables a bit more complicated control of your CNC as well as LCD output of useful info.
 
 
 ## What it does?
