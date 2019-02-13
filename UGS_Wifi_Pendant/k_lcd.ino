@@ -82,8 +82,6 @@ void displayLCD(){
                         lcd.clear();
                         lcd.setCursor(0, 0);
                         lcd.print(lcdMsgReturnToXYzero);
-                        lcd.setCursor(0, 1);
-                        lcd.print(lcdMsgReturnToXYzero1);
                         buttonPressMsg = 255;
                 }else if(buttonPressMsg == 12){
                         Serial.println("Return to Z zero (quickly)");

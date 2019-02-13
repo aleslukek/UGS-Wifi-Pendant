@@ -1,11 +1,11 @@
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
-#include <libs/ESP8266HTTPClient.h>
-#include <libs/ESP8266Ping.h>
-#include <libs/LiquidCrystal_I2C.h>
+#include <ESP8266HTTPClient.h>
+#include <ESP8266Ping.h>
+#include <LiquidCrystal_I2C.h>
 
-#define  pendatVersion  1.01
+#define  pendatVersion  1.02
 
 LiquidCrystal_I2C lcd(0x3F, 16, 2);
 #define resetPinD5 16 //D0
@@ -77,12 +77,12 @@ unsigned int oldButtonValues;
    button[2] - middle button, Shift, if slow toggle is 1, and laser mode is 1 shift turns on laser test
    button[3] - bottom left button, Pause-Resume / Laser mode (toggle laser mode)
    button[4] - bottom right button, Cancel (or $X on idle) / Soft reset + $X
-   button[5] - Y-
-   button[6] - Y+
-   button[7] - X-
-   button[8] - X+
-   button[9] - Z-
-   button[10] - Z+
+   button[5] - Y- / return to XY zero
+   button[6] - Y+ / return to XY zero
+   button[7] - X- / return to XY zero
+   button[8] - X+ / return to XY zero
+   button[9] - Z- / return to Z zero
+   button[10] - Z+ / return to Z zero
    button[11] - slow/fast toggle for jogging
    button[12] - N/A
    button[13] - N/A
@@ -104,30 +104,34 @@ unsigned int oldButtonValues;
 #define dataPin         12 // Connects to the Q7 pin the 165
 #define clockPin        15 // Connects to the Clock pin the 165
 
-#define GETmovexyz "/sendGcode/?gCode=%24J%3DG21G91"
-#define GETresetzero "/sendGcode/?gCode=G10%20P0%20L20%20X0%20Y0%20Z0"
-#define GETresetZzero "/sendGcode/?gCode=G10%20P0%20L20%20Z0.0000"
-#define GETreturntozero "/sendGcode/?gCode=RETURN_TO_ZERO"
-#define GETreturntoworkspace "/sendGcode/?gCode=G90%20G0%20X0%20Y0%20Z0"
-#define GEThomingcycle "/sendGcode/?gCode=%24H"
-#define GETdisablealarmlock "/sendGcode/?gCode=%24X"
-#define GETtogglecheckmode "/sendGcode/?gCode=%24C"
-#define GETsoftreset "/sendGcode/?gCode=%24C" //run toggle check mode twice in a row
-//#define GETsoftreset "/sendGcode/?gCode=%24C" //^X, 0x18, ctrl-x doesnt work. So physical pin is needed for hard limit alarm
-#define GETspindleON "/sendGcode/?gCode=M8"
-#define GETspindleOFF "/sendGcode/?gCode=M9"
-#define GETpause "/sendGcode/?gCode=PAUSE_RESUME_FILE"
-#define GETsend "/sendGcode/?gCode=SEND_FILE"
-#define GETresume "/sendGcode/?gCode=PAUSE_RESUME_FILE"
-#define GETcancelJob "/sendGcode/?gCode=CANCEL_FILE"
-#define GETcancel "/sendGcode/?gCode=CANCEL_FILE"
-#define GETsystemState "/getSystemState/"
-#define GETtoggleLaser "/sendGcode/?gCode=%2432%3D" //%36 should be $ Laser toggle is $32=
-#define GETlaserTestOn "/sendGcode/?gCode=M3" //Run test as M04 Sxx (xx are laserTestStrength) - this will only turn on laser, but not fire it yet, since G1 command is not issued
-#define GETlaserTestPower "/sendGcode/?gCode=M4%20S1" //Run test as M04 Sxx (xx are laserTestStrength) - this will only turn on laser, but not fire it yet, since G1 command is not issued
-#define GETlaserTestOff "/sendGcode/?gCode=M5" //Turn off M4 with M05
-#define GETmoveLeftABit "/sendGcode/?gCode=G1%20G91%20X-0.1%20F5000" //move relative 0.1 mm to left
-#define GETmoveRightABit "/sendGcode/?gCode=G1%20G91%20X0.1%20F5000" //move relative 0.1 mm to right
+#define   GETmovexyz                "/sendGcode/?gCode=%24J%3DG21G91"
+#define   GETresetzero              "/sendGcode/?gCode=G10%20P0%20L20%20X0%20Y0%20Z0"
+#define   GETresetZzero             "/sendGcode/?gCode=G10%20P0%20L20%20Z0.0000"
+#define   GETreturntozero           "/sendGcode/?gCode=RETURN_TO_ZERO"
+#define   GETmoveToZeroZslowly      "/sendGcode/?gCode=G90%20G0%20Z0%20F50" //return to Z0 slowly
+#define   GETmoveToZeroZquickly     "/sendGcode/?gCode=G90%20G0%20Z0%20F500" //return to X0 quickly
+#define   GETmoveToZeroXYslowly     "/sendGcode/?gCode=G90%20G0%20X0%20Y0%20F500" //return to XY slowly
+#define   GETmoveToZeroXYquickly    "/sendGcode/?gCode=G90%20G0%20X0%20Y0%20F5000" //return to XY quickly
+#define   GETreturntoworkspace      "/sendGcode/?gCode=G90%20G0%20X0%20Y0%20Z0"
+#define   GEThomingcycle            "/sendGcode/?gCode=%24H"
+#define   GETdisablealarmlock       "/sendGcode/?gCode=%24X"
+#define   GETtogglecheckmode        "/sendGcode/?gCode=%24C"
+#define   GETsoftreset              "/sendGcode/?gCode=%24C" //run toggle check mode twice in a row
+//#define   GETsoftreset              "/sendGcode/?gCode=%24C" //^X, 0x18, ctrl-x doesnt work. So physical pin is needed for hard limit alarm
+#define   GETspindleON              "/sendGcode/?gCode=M8"
+#define   GETspindleOFF             "/sendGcode/?gCode=M9"
+#define   GETpause                  "/sendGcode/?gCode=PAUSE_RESUME_FILE"
+#define   GETsend                   "/sendGcode/?gCode=SEND_FILE"
+#define   GETresume                 "/sendGcode/?gCode=PAUSE_RESUME_FILE"
+#define   GETcancelJob              "/sendGcode/?gCode=CANCEL_FILE"
+#define   GETcancel                 "/sendGcode/?gCode=CANCEL_FILE"
+#define   GETsystemState            "/getSystemState/"
+#define   GETtoggleLaser            "/sendGcode/?gCode=%2432%3D" //%36 should be $ Laser toggle is $32=
+#define   GETlaserTestOn            "/sendGcode/?gCode=M3" //Run test as M04 Sxx (xx are laserTestStrength) - this will only turn on laser, but not fire it yet, since G1 command is not issued
+#define   GETlaserTestPower         "/sendGcode/?gCode=M4%20S1" //Run test as M04 Sxx (xx are laserTestStrength) - this will only turn on laser, but not fire it yet, since G1 command is not issued
+#define   GETlaserTestOff           "/sendGcode/?gCode=M5" //Turn off M4 with M05
+#define   GETmoveLeftABit           "/sendGcode/?gCode=G1%20G91%20X-0.1%20F5000" //move relative 0.1 mm to left
+#define   GETmoveRightABit          "/sendGcode/?gCode=G1%20G91%20X0.1%20F5000" //move relative 0.1 mm to right
 
 bool shiftStatus = 0;
 bool prevShiftStatus = 0;
