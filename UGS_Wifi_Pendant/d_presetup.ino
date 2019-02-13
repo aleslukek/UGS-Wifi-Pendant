@@ -5,7 +5,7 @@
 #include <ESP8266Ping.h>
 #include <LiquidCrystal_I2C.h>
 
-#define  pendatVersion  1.02
+#define  pendatVersion  1.03
 
 LiquidCrystal_I2C lcd(0x3F, 16, 2);
 #define resetPinD5 16 //D0

@@ -1,3 +1,6 @@
+# 1.03 - 13.2.2019
+* Bugfix, added G91 to z probe. Sometimes Z probe was probing in wrong direction, depending on Z zero.
+
 # 1.02 - 13.2.2019
 * Some small code cleanup.
 

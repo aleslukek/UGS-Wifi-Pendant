@@ -211,8 +211,8 @@ void getDirection(int xdirection, int ydirection, int zdirection, bool slow){
 void zAxisProbe(){
         HTTPClient http;
         if(resetZAxisAfterProbe == 0 && cnc_state[4] == 1) {//Not yet probed, start probing
-                //G38.2 Z-20 F100 -> to activate Probe
-                String getFull = "http://" + webserver + ":" + webserverport + "/sendGcode/?gCode=G38.2%20Z-" + probeStep + "%20F" + probeRate;
+                //G91 G38.2 Z-20 F100 -> to activate Probe
+                String getFull = "http://" + webserver + ":" + webserverport + "/sendGcode/?gCode=G91%20G38.2%20Z-" + probeStep + "%20F" + probeRate;
                 http.begin(getFull);
                 int httpCode = http.GET();
                 http.end(); //Close connection
