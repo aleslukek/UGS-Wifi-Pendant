@@ -88,6 +88,10 @@ Then you'll have to set some things up, really simply. You don't need to change 
         webserverport = "8080";
 
 
+        iftttKey - your IFTTT Webhook key
+        iftttEventName - ifttt event name. MUST match the one on IFTTT website.
+
+
 
 #### Personal settings that make anything working better.
          xyStepSizeFast 800  - x and y step size for quick jog. Might be as long as you want.
@@ -106,6 +110,7 @@ Then you'll have to set some things up, really simply. You don't need to change 
          autoResetAlarm false - if you want for pendant to automatically send $X when idle and alarm was triggered (not Hard Limit alarm) set true, else it will not
          autoResetStartupAlarm true - automatically send $X on startup to remove general alarm
          enableSerialOutput true - Enables serial output. For debugging purposes. Disable if not needed. Will make code run a small bit faster.
+         enableIftttMessaging true - Enables IFTTT notifications.
 
 
 * LCD language. Uncomment the wanted one and comment the unwanted one. Currently English and Slovenian. If you'd like to contribute or change, language is in file e_lcd_lang.ino
