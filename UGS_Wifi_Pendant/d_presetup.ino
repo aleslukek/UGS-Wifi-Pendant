@@ -5,7 +5,7 @@
 #include <ESP8266Ping.h>
 #include <LiquidCrystal_I2C.h>
 
-#define  pendatVersion  1.03
+#define  pendatVersion  1.04
 
 LiquidCrystal_I2C lcd(0x3F, 16, 2);
 #define resetPinD5 16 //D0
@@ -108,11 +108,11 @@ unsigned int oldButtonValues;
 #define   GETresetzero              "/sendGcode/?gCode=G10%20P0%20L20%20X0%20Y0%20Z0"
 #define   GETresetZzero             "/sendGcode/?gCode=G10%20P0%20L20%20Z0.0000"
 #define   GETreturntozero           "/sendGcode/?gCode=RETURN_TO_ZERO"
-#define   GETmoveToZeroZslowly      "/sendGcode/?gCode=G90%20G0%20Z0%20F50" //return to Z0 slowly
-#define   GETmoveToZeroZquickly     "/sendGcode/?gCode=G90%20G0%20Z0%20F500" //return to X0 quickly
-#define   GETmoveToZeroXYslowly     "/sendGcode/?gCode=G90%20G0%20X0%20Y0%20F500" //return to XY slowly
-#define   GETmoveToZeroXYquickly    "/sendGcode/?gCode=G90%20G0%20X0%20Y0%20F5000" //return to XY quickly
-#define   GETreturntoworkspace      "/sendGcode/?gCode=G90%20G0%20X0%20Y0%20Z0"
+#define   GETmoveToZeroZslowly      "/sendGcode/?gCode=G1%20G90%20Z0%20F50" //return to Z0 slowly
+#define   GETmoveToZeroZquickly     "/sendGcode/?gCode=G1%20G90%20Z0%20F500" //return to X0 quickly
+#define   GETmoveToZeroXYslowly     "/sendGcode/?gCode=G1%20G90%20X0%20Y0%20F500" //return to XY slowly
+#define   GETmoveToZeroXYquickly    "/sendGcode/?gCode=G1%20G90%20X0%20Y0%20F5000" //return to XY quickly
+#define   GETreturntoworkspace      "/sendGcode/?gCode=G0%20G90%20X0%20Y0%20Z0"
 #define   GEThomingcycle            "/sendGcode/?gCode=%24H"
 #define   GETdisablealarmlock       "/sendGcode/?gCode=%24X"
 #define   GETtogglecheckmode        "/sendGcode/?gCode=%24C"
@@ -141,7 +141,8 @@ bool directionStatusZ = 0;
 bool directionStatus = 0;
 String webserver;
 
-
+//
+bool iftttSend = 0;
 
 
 //=======================================================================
@@ -153,6 +154,7 @@ void directionButtons();
 void displayLCD();
 void getCommandGeneral(String getCommand);
 void getDirection(int xdirection, int ydirection, int zdirection, bool slow = 0);
+void iftttMessage(String message);
 void maintanance();
 void parseString(String pendantPayload);
 void physicalReset();

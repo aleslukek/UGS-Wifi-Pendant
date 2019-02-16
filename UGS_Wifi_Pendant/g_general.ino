@@ -149,20 +149,31 @@ void parseString(String pendantPayload){
                         if(autoResetAlarm == true) {
                                 disableAlarmLockLogic = 1; //automatically $X
                         }
+                        if(iftttSend == 1){
+                                iftttMessage(iftttMessageGeneralAlarm);
+                        }
 
                 }else if(pendantPayload.indexOf("ALARM:1 (Hard limit)") > 0) {
                         cnc_state[8] = 1;
                         turnOnLCD = 1;
+                        if(iftttSend == 1){
+                                iftttMessage(iftttMessageHardAlarm);
+                        }
                 }else if(pendantPayload.indexOf("Sleep") > 0) {
                         cnc_state[10] = 1;
+                        if(iftttSend == 1){
+                                iftttMessage(iftttMessageSleeping);
+                        }
                 }else if(pendantPayload.indexOf("Idle") > 0) {
                         cnc_state[8] = 0;
                         cnc_state[9] = 0;
                         cnc_state[10] = 0;
+                        iftttSend = 0;
                 }
                 if(resetZAxisAfterProbe == 1) {
                         zAxisProbe();
                 }
+                iftttSend = 0;
         }else if(pendantPayload.indexOf("COMM_SENDING_PAUSED") > 0) {
                 turnOnLCD = 1;
                 cnc_state[0] = 0;
@@ -192,9 +203,11 @@ void parseString(String pendantPayload){
                 if(pendantPayload.indexOf("Run") > 0) {//Job running
                         cnc_state[5] = 1;
                         cnc_state[7] = 0;
+                        iftttSend = 1; //when status changes it should send a notification. So when it stops running it means it finished or something went wrong.
                 }else{//Jogging
                         cnc_state[5] = 0;
                         cnc_state[7] = 1;
+                        iftttSend = 0;
                 }
         }else if(pendantPayload.indexOf("COMM_DISCONNECTED") > 0) {
                 cnc_state[0] = 0;

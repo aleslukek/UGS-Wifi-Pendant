@@ -5,6 +5,8 @@ This is an addon for an [Universal Gcode Sender](https://github.com/winder/Unive
 ## What it does?
 It takes buttons input and translates it to web requests that commands UGS via it's wifi pendant. You can move CNC (x, y z), slow move, start home cycle, z probe, reset XYZ zero, reset Z zero, return to XY zero, return to Z zero, pause, start job, cancel, toggle laser mode, soft reset (not fully working yet, will get around to fix this), toggle source computer.
 
+When the job is done it can send a notification via IFTTT.com.
+
 It uses LCD to output CNC data, such as machine position, work position, job duration, job time remaining, job sent rows, total rows, progress, file selected, errors and things like that.
 
 When job is running most of the buttons are disabled. Only pause, cancel and toggles are working. So you can't accidentally send commands that have nothing to do with job running.
@@ -18,12 +20,12 @@ When job is running most of the buttons are disabled. Only pause, cancel and tog
 * Button 2 - Shift, if slow toggle is 1, and laser mode is 1 shift turns on laser test
 * Button 3 - Pause-Resume / Laser mode (toggle laser mode if enableLaserMode is enabled) OR toggle Check mode
 * Button 4 - Cancel (or $X on idle) / Soft reset + $X
-* Button 5 - Y-
-* Button 6 - Y+
-* Button 7 - X-
-* Button 8 - X+
-* Button 9 - Z-
-* Button 10 - Z+
+* Button 5 - Y- / Return to XY zero
+* Button 6 - Y+ / Return to XY zero
+* Button 7 - X- / Return to XY zero
+* Button 8 - X+ / Return to XY zero
+* Button 9 - Z- / Return to Z zero
+* Button 10 - Z+ / Return to Z zero
 * Button 11 - Slow/fast toggle for jogging
 * Button 12 - N/A
 * Button 13 - N/A
@@ -38,8 +40,8 @@ When job is running most of the buttons are disabled. Only pause, cancel and tog
 * Button 2 + Button 3 (shift + pause) toggles laser mode $32=1 and $32=0. This pendant is unaware of current CNC laser mode. So if you press those two buttons even if laser mode is on it will turn it on not off. And vice versa. When laser mode is on led 1 is on.
 * Button 4 cancels running job or jog, but acts as $X when idle. Soft reset currently doesn't work if hard limit switches are triggered. This is UGS problem that needs addressing not mine.
 Button 11 is as toggle. When not pressed CNC jogs with higher feed rate. When toggle is pressed, led 2 turns on and jogging is slower.
-* Button 2 + any X/Y button returns to XY work zero (G0 X0 Y0). This action observes slow/quick toggle and acts accordingly.
-* Button 2 + any Z button returns to Z work zero (G0 Z0). This action observes slow/quick toggle and acts accordingly.
+* Button 2 + any X/Y button returns to XY work zero (G90 G0 X0 Y0). This action observes slow/quick toggle and acts accordingly.
+* Button 2 + any Z button returns to Z work zero (G90 G0 Z0). This action observes slow/quick toggle and acts accordingly.
 * When laser mode is on ($32=1) and slow toggle is also on (so both LEDs are on) button 2 acts as laser test fire. It fires laser at slowest power. Be aware that if you have spindle connected to Spindle enable pin on grbl Arduino it will turn on your spindle. That might be much more dangerous than laser on lowest power. But lasers are dangerous as well, don't get me wrong. USE AT YOUR OWN RISK!
 
 
@@ -62,6 +64,12 @@ Button 11 is as toggle. When not pressed CNC jogs with higher feed rate. When to
 
 * Be mindful that button must be connected in such a way that signals 0V when not pressed and +V (3.3V) when pressed. If you only send +V when button is pressed and not 0V when not pressed it will trigger shift registers.
 
+## IFTTT notification
+
+To enable IFTTT notification you must find your IFTTT Key found [somewhere here](https://ifttt.com/maker_webhooks) and assign it to "iftttKey" variable. Also at this point you must make an event (trigger) with event name. IFTTT event name must match to a variable "iftttEventName" found in UGS_Wifi_Pendant.ino. I would recommend IFTTT notification action to be: "CNC event on {{OccurredAt}}. Message: {{Value1}}". Value1 is an event message.
+
+IFTTT notification happens when job is aborted by an error (hard limit or general error) or when CNC goes to sleep mode after a job - if a gcode file has $SLP at the end.
+Canceling and pausing a job wont trigger a notification (since you are probably standing next to it). Also if a job does not have a $SLP at the end of a gcode file this will not send a notification. You should always use $SLP when doing a job when you are not around.
 
 
 ## How to compile...
@@ -126,7 +134,7 @@ Please refer to schematic in schematic folder for if you'd like to make a PCB fo
 # Known issues
 * Soft reset won't work until UGS starts to support soft reset via get request.
 * Laser test fire doesn't fire consistently. When it does it might freeze grbl. But sometimes it does not. Not because get requests are not getting through but for some (so far to me) unknown reason, I assume connected to grbl.
-* Very rarely jogging stops responding. It start moving and then it doesn't stop. Cancel button doesn't work, it jogs until it hits hard limit switch. For that reason I would strongly recommend to ONLY use this pendant on machines that have hard limits working in all directions. For safety reason of course. I haven't pinpointed the issue to either wifi pendant, ugs, grbl or esp pendant. I assume esp.
+* Very rarely jogging stops responding. It start moving and then it doesn't stop. Cancel button doesn't work, it jogs until it hits hard limit switch. For that reason I would strongly recommend to ONLY use this pendant on machines that have hard limits working in all directions. For safety reason of course. I haven't pinpointed the issue to either wifi pendant, ugs, grbl or esp pendant.
 
 
 # WARNING

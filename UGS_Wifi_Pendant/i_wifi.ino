@@ -308,3 +308,33 @@ void readUGSPendant(){
         http.end(); //Close connection
         return;
 }
+
+
+
+
+//=======================================================================
+//                    IFTTT Message
+//=======================================================================
+void iftttMessage(String message){
+  if(enableIftttMessaging == true){
+          delay(100);
+          HTTPClient http; //Declare object of class HTTPClient
+          String getFull = "http://maker.ifttt.com/trigger/";
+          getFull = getFull + iftttEventName;
+          getFull = getFull + "/with/key/";
+          getFull = getFull + iftttKey;
+          getFull = getFull + "?value1=";
+          getFull = getFull + message;
+          http.begin(getFull);
+          int httpCode = http.GET();
+          http.end();         //Close connection
+          timer1 = millis();
+          justSentGeneral = 1;
+          Serial.print("Ifttt message sent: ");
+          Serial.println(message);
+          iftttSend = 0;
+  }else{
+          return;
+  }
+  return;
+}

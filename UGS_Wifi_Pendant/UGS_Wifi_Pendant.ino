@@ -13,6 +13,11 @@ const char *password = "***********";
 const String webserverport = "8080";
 
 
+//IFTTT settings
+#define iftttKey "**********************" //IFTTT Webhook key
+#define iftttEventName "**********" //Name of the IFTTT event - I recommend to make an event that sends notification to your mobile device. Recommended event action: "CNC event on {{OccurredAt}}. Message: {{Value1}}"
+
+
 /* CNC timing, rate, step and other settings */
 #define xyStepSizeFast 800 //x and y step on fast cycle (z step is 1/10 of that) - Default value: 800 mm
 #define xyStepRateFast 5000 //x and y rate on fast cycle (z rate is 1/10 of that) - Default value: 5000 mm/min
@@ -23,7 +28,7 @@ const String webserverport = "8080";
 #define drillProbeHeight 2 //Height of a probe (mm) - Default value: 2 mm
 #define enableLaserMode true //if true, this will enable toggling laser mode
 #define laserProbeHeight 0 //If you probe Z axis while in laser mode, you might use the different probe (for set laser height). This is offset of this probe height. Default value: 0 mm
-#define skipGetDelay 50 //when button is pressed, no other button will register after skipGetDelay milliseconds - Default value: 50 ms
+#define skipGetDelay 100 //when button is pressed, no other button will register after skipGetDelay milliseconds - Default value: 50 ms
 #define skipMsgDelay 1000 //when button is pressed, display what happened and after skipMsgDelay milliseconds display status - Default value: 1000
 #define turnBacklightDelay 600000 //turn off LCD backlight after this many milliseconds of inactivity - Default value: 600000 ms
 #define jumpSign 5000 //jump sign after 5000 ms (cycling data when idle or running) - Default value: 5000 ms
@@ -31,6 +36,7 @@ const String webserverport = "8080";
 #define autoResetStartupAlarm true //automatically send $X on startup to remove general alarm - Default value: true
 #define enableResetPhyPin false //true to enable hardware reset pin to arduino. Caution: if esp reboots it may reset arduino! Default value: false
 #define enableSerialOutput true //disable if not needed. Will make code run a small bit faster. Default value: true
+#define enableIftttMessaging true //enable if you'd want to be notified via IFTTT when job is done or if job was aborted due to an error. Default value: true
 
 // Language //
 // Uncomment language you want and comment the unwanted one

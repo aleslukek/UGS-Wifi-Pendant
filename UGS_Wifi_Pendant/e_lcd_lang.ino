@@ -78,6 +78,12 @@
       #define      lcdMsgProgress                 "    Progres:"
       #define      lcdMsgSomethingWentWrong       "Nekaj je narobe"
       #define      lcdMsgIDK                      "...ne vem..."
+      //For ifttt messages, spaces should be replaced with %20. And ascii characters only!
+      #define      iftttMessageSleeping           "CNC%20v%20hibernaciji,%20delo%20koncano."
+      #define      iftttMessageHardAlarm          "CNC%20delo%20prekinjeno,%20NAPAKA:%20limit%20sprozen!"
+      #define      iftttMessageGeneralAlarm       "CNC%20delo%20prekinjeno,%20NAPAKA:%20splosna%20napaka!"
+      #define      iftttMessageIdle               "CNC%20v%20pripravljenosti,%20delo%20koncano."
+      #define      iftttMessageDisconnected       "CNC%20delo%20prekinjeno,%20NAPAKA:%20CNC%20nedosegljiv!"
 #endif
 
 #ifdef LanguageEnglish
@@ -157,4 +163,10 @@
       #define      lcdMsgProgress                 "   Progress:"
       #define      lcdMsgSomethingWentWrong       "Something wrong"
       #define      lcdMsgIDK                      " ...IDK what..."
+      //For ifttt messages, spaces should be replaced with %20. And ascii characters only!
+      #define      iftttMessageSleeping           "CNC%20sleeping,%20job%20finished."
+      #define      iftttMessageHardAlarm          "CNC%20job%20aborted,%20ERROR:%20hard%20limit%20triggered!"
+      #define      iftttMessageGeneralAlarm       "CNC%20job%20aborted,%20ERROR:%20general%20error!"
+      #define      iftttMessageIdle               "CNC%20idle,%20job%20finished."
+      #define      iftttMessageDisconnected       "CNC%20job%20aborted,%20ERROR:%20CNC%20disconnected!"
 #endif
