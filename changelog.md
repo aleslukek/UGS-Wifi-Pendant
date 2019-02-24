@@ -1,3 +1,8 @@
+#1.05 - 24.2.2019
+* Added OTA updates. You can now update your module wirelessly. You can enable or disable OTA updates. You can also enable or disable OTA password.
+* Changed how progress is being calculated. So it better handles empty rows and comments in gcode file.
+* Changed how estimated remaining time is being calculated; it should not jump around like in UGS does. And it is more accurate. And it works by applying magic.
+
 # 1.04 - 16.2.2019
 * Added a notification system; it sends notifications to your phone via IFTTT.com when job is finished/aborted.
 * Introduced small delay (20ms) to cancel command in cases when cancel command is requested right after jog command. This cancel command overrules 50 ms delay to all get requests.

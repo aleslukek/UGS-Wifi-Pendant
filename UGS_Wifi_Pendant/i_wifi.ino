@@ -316,25 +316,55 @@ void readUGSPendant(){
 //                    IFTTT Message
 //=======================================================================
 void iftttMessage(String message){
-  if(enableIftttMessaging == true){
-          delay(100);
-          HTTPClient http; //Declare object of class HTTPClient
-          String getFull = "http://maker.ifttt.com/trigger/";
-          getFull = getFull + iftttEventName;
-          getFull = getFull + "/with/key/";
-          getFull = getFull + iftttKey;
-          getFull = getFull + "?value1=";
-          getFull = getFull + message;
-          http.begin(getFull);
-          int httpCode = http.GET();
-          http.end();         //Close connection
-          timer1 = millis();
-          justSentGeneral = 1;
-          Serial.print("Ifttt message sent: ");
-          Serial.println(message);
-          iftttSend = 0;
-  }else{
-          return;
-  }
-  return;
+        if(enableIftttMessaging == true) {
+                delay(100);
+                HTTPClient http; //Declare object of class HTTPClient
+                String getFull = "http://maker.ifttt.com/trigger/";
+                getFull = getFull + iftttEventName;
+                getFull = getFull + "/with/key/";
+                getFull = getFull + iftttKey;
+                getFull = getFull + "?value1=";
+                getFull = getFull + message;
+                http.begin(getFull);
+                int httpCode = http.GET();
+                http.end();   //Close connection
+                timer1 = millis();
+                justSentGeneral = 1;
+                Serial.print("Ifttt message sent: ");
+                Serial.println(message);
+                iftttSend = 0;
+        }else{
+                return;
+        }
+        return;
+}
+
+
+
+
+//=======================================================================
+//                    OTA Setup function
+//=======================================================================
+void otaSetup(){
+        if(enableOTAPassword == true) {
+                ArduinoOTA.setPassword((const char *)OTAPassword); //To be able to OTA update, you must enter a password if enableOTAPassword is enabled
+        }
+        ArduinoOTA.onStart([]() {
+                Serial.println("OTA Start");
+        });
+        ArduinoOTA.onEnd([]() {
+                Serial.println("\n OTA End");
+        });
+        ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
+                Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
+        });
+        ArduinoOTA.onError([](ota_error_t error) {
+                Serial.printf("OTA Error[%u]: ", error);
+                if (error == OTA_AUTH_ERROR) Serial.println("Auth Failed");
+                else if (error == OTA_BEGIN_ERROR) Serial.println("Begin Failed");
+                else if (error == OTA_CONNECT_ERROR) Serial.println("Connect Failed");
+                else if (error == OTA_RECEIVE_ERROR) Serial.println("Receive Failed");
+                else if (error == OTA_END_ERROR) Serial.println("End Failed");
+        });
+        ArduinoOTA.begin();
 }

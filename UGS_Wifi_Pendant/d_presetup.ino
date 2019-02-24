@@ -4,8 +4,11 @@
 #include <ESP8266HTTPClient.h>
 #include <ESP8266Ping.h>
 #include <LiquidCrystal_I2C.h>
+#include <ESP8266mDNS.h>
+#include <WiFiUdp.h>
+#include <ArduinoOTA.h>
 
-#define  pendatVersion  1.04
+#define  pendatVersion  1.05
 
 LiquidCrystal_I2C lcd(0x3F, 16, 2);
 #define resetPinD5 16 //D0
@@ -34,7 +37,8 @@ bool lcdBacklightStatus = 0;
 byte showLCD = 0;
 bool laserMode = 0;
 bool laserTest = 0;
-bool cnc_state[15] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+#define numOfStates 15
+bool cnc_state[numOfStates] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 
 /*

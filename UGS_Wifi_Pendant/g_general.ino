@@ -66,6 +66,10 @@ void maintanance(){
                 }
         }
 
+        //handle OTA updates
+        if((cnc_state[4] != 1 || cnc_state[5] != 1 || cnc_state[6] != 1 || cnc_state[7] != 1 || cnc_state[8] != 1 || cnc_state[9] != 1 || cnc_state[10] != 1) && cycleCounter % 1102 == 0 && enableOTAUpdate == true) { //check for OTA ONLY when UGS is not available, or PC is not connected, every 1102th cycle
+                ArduinoOTA.handle();
+        }
 
         // increase cycle counter
         cycleCounter++;
@@ -149,19 +153,19 @@ void parseString(String pendantPayload){
                         if(autoResetAlarm == true) {
                                 disableAlarmLockLogic = 1; //automatically $X
                         }
-                        if(iftttSend == 1){
+                        if(iftttSend == 1) {
                                 iftttMessage(iftttMessageGeneralAlarm);
                         }
 
                 }else if(pendantPayload.indexOf("ALARM:1 (Hard limit)") > 0) {
                         cnc_state[8] = 1;
                         turnOnLCD = 1;
-                        if(iftttSend == 1){
+                        if(iftttSend == 1) {
                                 iftttMessage(iftttMessageHardAlarm);
                         }
                 }else if(pendantPayload.indexOf("Sleep") > 0) {
                         cnc_state[10] = 1;
-                        if(iftttSend == 1){
+                        if(iftttSend == 1) {
                                 iftttMessage(iftttMessageSleeping);
                         }
                 }else if(pendantPayload.indexOf("Idle") > 0) {
@@ -240,25 +244,28 @@ void parseString(String pendantPayload){
         if(sentRows < 0) {
                 sentRows = 0;
         }
-        remainingRows = rowsInFile - sentRows;
+        remainingRows = atoi(variable[11]);
         if(remainingRows < 0) {
                 remainingRows = 0;
-        }
-        timeRemaining = atoi(variable[12]);
-        if(timeRemaining < 0) {
-                timeRemaining = 0;
         }
         duration = atoi(variable[13]);
         if(duration < 0) {
                 duration = 0;
         }
+        if(sentRows != 0) { //If this is not there ESP goes wild into reboot cycle. It can't divide by 0.
+                timeRemaining = ((float)duration / (float)sentRows) * remainingRows; //Estemated time remaining, based on time duration, sent rows and remaining rows
+        }else{
+                timeRemaining = 0;
+        }
+
+        if(timeRemaining < 0) {
+                timeRemaining = 0;
+        }
         if(rowsInFile != 0) {
-                rowProgress = (float)sentRows / (float)rowsInFile * 100;
+                rowProgress = (float)sentRows / ((float)sentRows + (float)remainingRows) * 100; //if there are empty rows they are not subtracted from total rows in file, so this is why you don't use that number
         }else{
                 rowProgress = 0;
         }
-
-
         if(variable[14][0] == 116) {
                 cnc_state[11] = 1;
         }else{
@@ -347,6 +354,13 @@ void printSerialDebug(byte mode){
                 Serial.println(" ms");
                 timer3 = millis();
                 Serial.println();
+        }else if(mode == 4) {
+                for(byte i = 0; i < numOfStates; i++) {
+                        Serial.print("cnc_state[");
+                        Serial.print(i);
+                        Serial.print("] = ");
+                        Serial.println(cnc_state[i]);
+                }
         }else{
                 return;
         }
@@ -424,6 +438,23 @@ void serialPrintInfo(){ //Prints some general info on startup
                 Serial.print(laserProbeHeight);
                 Serial.println(" mm");
         }
+
+        Serial.print("Ifttt messaging is ");
+        if(enableIftttMessaging == true) {
+                Serial.println("enabled");
+        }else{
+                Serial.println("disabled");
+        }
+        Serial.print("OTA updates are ");
+        if(enableOTAUpdate == true) {
+                Serial.print("enabled.");
+                if(enableOTAPassword == true) {
+                        Serial.print(" OTA Password is ");
+                        Serial.println(OTAPassword);
+                }
+        }else{
+                Serial.println("disabled.");
+        }
         Serial.println();
         Serial.println("=======================================================================");
         Serial.println();
@@ -436,8 +467,10 @@ void serialPrintInfo(){ //Prints some general info on startup
 //                    Physical pin for reset on output D5 (14)
 //=======================================================================
 void physicalReset(){ //Puts D5 that should be connected to GRBL reset/abort pin to low to reset grbl
-        digitalWrite(resetPinD5, LOW);
-        delay(10);
-        digitalWrite(resetPinD5, HIGH);
+        if(enableResetPhyPin == true) {
+                digitalWrite(resetPinD5, LOW);
+                delay(10);
+                digitalWrite(resetPinD5, HIGH);
+        }
         return;
 }

@@ -7,6 +7,8 @@ It takes buttons input and translates it to web requests that commands UGS via i
 
 When the job is done it can send a notification via IFTTT.com.
 
+OTA updates via local network (tested via Arduino IDE)!
+
 It uses LCD to output CNC data, such as machine position, work position, job duration, job time remaining, job sent rows, total rows, progress, file selected, errors and things like that.
 
 When job is running most of the buttons are disabled. Only pause, cancel and toggles are working. So you can't accidentally send commands that have nothing to do with job running.
@@ -111,6 +113,10 @@ Then you'll have to set some things up, really simply. You don't need to change 
          autoResetStartupAlarm true - automatically send $X on startup to remove general alarm
          enableSerialOutput true - Enables serial output. For debugging purposes. Disable if not needed. Will make code run a small bit faster.
          enableIftttMessaging true - Enables IFTTT notifications.
+
+         enableOTAUpdate true - enables Over The Air (over local wifi) firmware updates.
+         enableOTAPassword true - enables the need for password when OTA updating.
+         OTAPassword "******" - if enableOTAUpdate is enabled, enter a password you will have to enter when OTA updating next time. This password is printed on fresh boot via serial.
 
 
 * LCD language. Uncomment the wanted one and comment the unwanted one. Currently English and Slovenian. If you'd like to contribute or change, language is in file e_lcd_lang.ino

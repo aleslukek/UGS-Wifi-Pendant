@@ -12,11 +12,14 @@ const char *password = "***********";
 
 const String webserverport = "8080";
 
-
 //IFTTT settings
 #define iftttKey "**********************" //IFTTT Webhook key
 #define iftttEventName "**********" //Name of the IFTTT event - I recommend to make an event that sends notification to your mobile device. Recommended event action: "CNC event on {{OccurredAt}}. Message: {{Value1}}"
 
+//OTA Update
+#define enableOTAUpdate true //enables Over The Air (local wifi) firmware updates - Default value: true
+#define enableOTAPassword true //enables the need for password before OTA update - Default value: true
+#define OTAPassword "******" //if enableOTAUpdate is false than leave it as it is
 
 /* CNC timing, rate, step and other settings */
 #define xyStepSizeFast 800 //x and y step on fast cycle (z step is 1/10 of that) - Default value: 800 mm
@@ -36,7 +39,8 @@ const String webserverport = "8080";
 #define autoResetStartupAlarm true //automatically send $X on startup to remove general alarm - Default value: true
 #define enableResetPhyPin false //true to enable hardware reset pin to arduino. Caution: if esp reboots it may reset arduino! Default value: false
 #define enableSerialOutput true //disable if not needed. Will make code run a small bit faster. Default value: true
-#define enableIftttMessaging true //enable if you'd want to be notified via IFTTT when job is done or if job was aborted due to an error. Default value: true
+#define enableIftttMessaging true //enable if you'd want to be notified via IFTTT when job is finished or if job ended up with some kind of error. Default value: true
+
 
 // Language //
 // Uncomment language you want and comment the unwanted one

@@ -61,6 +61,9 @@ void setup() {
         lcd.print(lcdMsgConnected);
 
         Serial.println(WiFi.localIP()); //IP address assigned to your ESP
+        if(enableOTAUpdate == true) {
+                otaSetup(); //Prepare for OTA update;
+        }
         timer2 = millis();
         timer3 = millis();
         if(button[15] == 0) {
@@ -75,4 +78,5 @@ void setup() {
         }
         digitalWrite(ledSlow, LOW);
         digitalWrite(ledLaser, LOW);
+        Serial.println("Setup finished");
 }

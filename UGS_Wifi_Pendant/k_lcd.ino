@@ -71,25 +71,25 @@ void displayLCD(){
                         lcd.setCursor(0, 0);
                         lcd.print(lcdMsgStartaJob);
                         buttonPressMsg = 255;
-                }else if(buttonPressMsg == 10){
+                }else if(buttonPressMsg == 10) {
                         Serial.println("Return to XY zero (quickly)");
                         lcd.clear();
                         lcd.setCursor(0, 0);
                         lcd.print(lcdMsgReturnToXYzero);
                         buttonPressMsg = 255;
-                }else if(buttonPressMsg == 11){
+                }else if(buttonPressMsg == 11) {
                         Serial.println("Return to XY zero (slowly)");
                         lcd.clear();
                         lcd.setCursor(0, 0);
                         lcd.print(lcdMsgReturnToXYzero);
                         buttonPressMsg = 255;
-                }else if(buttonPressMsg == 12){
+                }else if(buttonPressMsg == 12) {
                         Serial.println("Return to Z zero (quickly)");
                         lcd.clear();
                         lcd.setCursor(0, 0);
                         lcd.print(lcdMsgReturnToZzero);
                         buttonPressMsg = 255;
-                }else if(buttonPressMsg == 13){
+                }else if(buttonPressMsg == 13) {
                         Serial.println("Return to Z zero (slowly)");
                         lcd.clear();
                         lcd.setCursor(0, 0);
