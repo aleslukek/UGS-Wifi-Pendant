@@ -1,4 +1,4 @@
-#1.05 - 24.2.2019
+# 1.05 - 24.2.2019
 * Added OTA updates. You can now update your module wirelessly. You can enable or disable OTA updates. You can also enable or disable OTA password.
 * Changed how progress is being calculated. So it better handles empty rows and comments in gcode file.
 * Changed how estimated remaining time is being calculated; it should not jump around like in UGS does. And it is more accurate. And it works by applying magic.
