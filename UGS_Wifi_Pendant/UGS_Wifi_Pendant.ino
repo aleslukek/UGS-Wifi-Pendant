@@ -13,6 +13,7 @@ const char *password = "***********";
 const String webserverport = "8080";
 
 //IFTTT settings
+#define enableIftttMessaging true //enable if you'd want to be notified via IFTTT when job is finished or if job ended up with some kind of error. Default value: true
 #define iftttKey "**********************" //IFTTT Webhook key
 #define iftttEventName "**********" //Name of the IFTTT event - I recommend to make an event that sends notification to your mobile device. Recommended event action: "CNC event on {{OccurredAt}}. Message: {{Value1}}"
 
@@ -39,8 +40,6 @@ const String webserverport = "8080";
 #define autoResetStartupAlarm true //automatically send $X on startup to remove general alarm - Default value: true
 #define enableResetPhyPin false //true to enable hardware reset pin to arduino. Caution: if esp reboots it may reset arduino! Default value: false
 #define enableSerialOutput true //disable if not needed. Will make code run a small bit faster. Default value: true
-#define enableIftttMessaging true //enable if you'd want to be notified via IFTTT when job is finished or if job ended up with some kind of error. Default value: true
-
 
 // Language //
 // Uncomment language you want and comment the unwanted one
