@@ -47,8 +47,13 @@
       #define      lcdMsgNoConn                   "  Ni povezave"
       #define      lcdMsgToInternet               " z internetom!"
       #define      lcdMsgNAvailable               "  ni dosegljiv"
+      #ifdef OLD_PENDANT
       #define      lcdMsgTurnOnUGS                " Prizgi UGS ali"
       #define      lcdMsgEnablePendant            "omogoci pendant"
+      #else
+      #define      lcdMsgTurnOnUGS                " Prizgi UGS"
+      #define      lcdMsgEnablePendant            ""
+      #endif
       #define      lcdMsgCNCNotConnected          " CNC ni povezan"
       #define      lcdMsgToComputer               " z racunalnikom"
       #define      lcdMsgAlarmLimit               " ALARM!   (RST)"
@@ -132,8 +137,14 @@
       #define      lcdMsgNoConn                   " No connection"
       #define      lcdMsgToInternet               "to the internet!"
       #define      lcdMsgNAvailable               " not available"
+      #ifdef OLD_PENDANT
       #define      lcdMsgTurnOnUGS                " Turn on UGS or"
       #define      lcdMsgEnablePendant            " enable pendant"
+      #endif
+      #ifdef OLD_PENDANT
+      #define      lcdMsgTurnOnUGS                " Turn on UGS"
+      #define      lcdMsgEnablePendant            ""
+      #endif
       #define      lcdMsgCNCNotConnected          "CNC not connectd"
       #define      lcdMsgToComputer               "to  the computer"
       #define      lcdMsgAlarmLimit               " ALARM!   (RST)"

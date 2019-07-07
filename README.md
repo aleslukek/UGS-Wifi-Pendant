@@ -1,9 +1,11 @@
 # UGS-Wifi-Pendant
 This is an addon for an [Universal Gcode Sender](https://github.com/winder/Universal-G-Code-Sender). It enables a bit more complicated control of your CNC as well as LCD output of useful info.
 
+It supports Old and New pendant. Communication is done via Wifi OR USB Serial. However, if you'd want for communication to work via USB cable (more reliable) you will have to have PowerShell script running in the background. This script listens to Serial on COM port (COMX should be replaced with the COM port of the Pendant device connected to the computer) and converts them to web and get requests via localhost to UGS Pendant. So it is quick, reliable but it is a bodge work. Not elegant but it works. I do not speak java good enough to implement this into UGS. I built this feature upon already working Wifi solution.
+
 
 ## What it does?
-It takes buttons input and translates it to web requests that commands UGS via it's wifi pendant. You can move CNC (x, y z), slow move, start home cycle, z probe, reset XYZ zero, reset Z zero, return to XY zero, return to Z zero, pause, start job, cancel, toggle laser mode, soft reset (not fully working yet, will get around to fix this), toggle source computer.
+It takes buttons input and translates it to web requests that commands UGS via it's wifi pendant. You can move CNC (x, y z), slow move, start home cycle, z probe, reset XYZ zero, reset Z zero, return to XY zero, return to Z zero, pause, start job, cancel, toggle laser mode, soft reset, toggle source computer, auto connect GRBL Arduino to UGS, etc.
 
 When the job is done it can send a notification via IFTTT.com.
 
@@ -40,7 +42,7 @@ When job is running most of the buttons are disabled. Only pause, cancel and tog
 * Button 2 acts as shift. Example: If you press button 0 CNC starts homing cycle. If you press button 2 (shift) + button 0 then it starts probing.  
 * Button 3 start job if file selected when CNC is idle and pauses job when CNC is running.
 * Button 2 + Button 3 (shift + pause) toggles laser mode $32=1 and $32=0. This pendant is unaware of current CNC laser mode. So if you press those two buttons even if laser mode is on it will turn it on not off. And vice versa. When laser mode is on led 1 is on.
-* Button 4 cancels running job or jog, but acts as $X when idle. Soft reset currently doesn't work if hard limit switches are triggered. This is UGS problem that needs addressing not mine.
+* Button 4 cancels running job or jog, but acts as $X when idle. Shift + Button 4 soft resets the GRBL device.
 Button 11 is as toggle. When not pressed CNC jogs with higher feed rate. When toggle is pressed, led 2 turns on and jogging is slower.
 * Button 2 + any X/Y button returns to XY work zero (G90 G0 X0 Y0). This action observes slow/quick toggle and acts accordingly.
 * Button 2 + any Z button returns to Z work zero (G90 G0 Z0). This action observes slow/quick toggle and acts accordingly.
@@ -55,7 +57,7 @@ Button 11 is as toggle. When not pressed CNC jogs with higher feed rate. When to
   * LM324N Op amp -> this could help with signalling 0V when button not pressed and +V when button pressed
   * I2C LCD 16*2
   * Buttons - momentary 5x
-  * Moar buttons - rocker switch on-off-on 3x
+  * Moaar buttons - rocker switch on-off-on 3x
   * Toggle buttons/switches 2x
   * Trimmer 100k or 10k
   * Screw terminal
@@ -79,14 +81,23 @@ Canceling and pausing a job wont trigger a notification (since you are probably 
 Obviously you'll need Arduino IDE or something that sends code to your ESP8266.
 Then you'll have to set some things up, really simply. You don't need to change any other code other than the one in UGS_Wifi_Pendant.ino
 
+* Pendant version. Uncomment the version you have. If you still use old UGS Wifi Pendant then uncomment OLD_PENDANT. If you use New Pendant and via Wifi use NEW_BREILERS_PENDANT. If you use New Pendant and via USB use BUTTONSTOSERIAL. ONLY ONE SHOULD BE UNCOMMENTED! BUTTONSTOSERIAL only works with new pendant.
+        //#define OLD_PENDANT
+        //#define NEW_BREILERS_PENDANT
+        //#define BUTTONSTOSERIAL
+
 * Wifi settings, self-explanatory. Just enter ssid and wifi password.
 
-* If you have CNC dedicated pc (or Raspberry pi) but also use laptop occasionally to control CNC you can use toggle to switch between them. I highly recommend to set static network ip for those devices on your local router. Name pc 1 and give it local ip. Also for pc 2. Or a mac or anything else that runs UGS. Server port is set to default to 8080 for both devices. I don't see a need for different ports on different devices. So it's the same one for both of them.
+* If you have CNC dedicated pc (or Raspberry pi) but also use laptop occasionally to control CNC you can use toggle to switch between them. I highly recommend to set static network ip for those devices on your local router. Name pc 1 and give it local ip. Also for pc 2. Or a mac or anything else that runs UGS. Server port is set to default to 8080 for both devices. I don't see a need for different ports on different devices. So it's the same one for both of them. Port name is so the UGS Pendant can auto-connect GRBL Device to UGS.
 
         controler1Name "PC1" //PC 1 name
         webserver1 "xxx.xxx.xxx.xxx" //PC 1 local ip
+        port1 "COMX" //PC 1 GRBL arduino port name
+
         controler2Name "PC2" //PC 2 name
         webserver2 "xxx.xxx.xxx.xxx" //PC 2 local ip
+        port2 "COMX" //PC 2 GRBL arduino port name
+
         webserverport = "8080";
 
 
@@ -119,12 +130,17 @@ Then you'll have to set some things up, really simply. You don't need to change 
          OTAPassword "******" - if enableOTAUpdate is enabled, enter a password you will have to enter when OTA updating next time. This password is printed on fresh boot via serial.
 
 
+#### Personal settings for serialToUGS.ps1 file.
+        Basically you will only need to figure out what COM port UGS pendant uses. So rename COMX in $PORT='COMX' to whatever COM port it is used. COM5 in my case. If you change USB Port you should change this as well.
+        Make sure it works in the background. You can use Windows Task Scheduler to make it start on boot as described [here](https://blog.netwrix.com/2018/07/03/how-to-automate-powershell-scripts-with-task-scheduler/).
+
+
 * LCD language. Uncomment the wanted one and comment the unwanted one. Currently English and Slovenian. If you'd like to contribute or change, language is in file e_lcd_lang.ino
 #define LanguageEnglish
 //#define LanguageSlovenian
 
 
-* If you encounter errors when compiling use libraries located in libraries folder and move them to arduino libraries folder
+* Extra, non standard libraries are included in the sketch in src folder. Leave them there, since libraries are pointed there.
 
 
 * This code checks for buttons state and button logic more than 1000 times per second. When state of any button changes it sends a request. It is done fairly quickly and I haven't encountered any lags or delays. LCD is updated almost every half a second or so. So everything works quite tightly.
@@ -143,9 +159,9 @@ Please refer to schematic in schematic folder for if you'd like to make a PCB fo
 
 
 # Known issues
-* Soft reset won't work until UGS starts to support soft reset via get request.
+* Old UGS Pendant: Soft reset won't work until UGS starts to support soft reset via get request. New UGS Pendant has a soft reset so it works.
 * Laser test fire doesn't fire consistently. When it does it might freeze grbl. But sometimes it does not. Not because get requests are not getting through but for some (so far to me) unknown reason, I assume connected to grbl.
-* Very rarely jogging stops responding. It start moving and then it doesn't stop. Cancel button doesn't work, it jogs until it hits hard limit switch. For that reason I would strongly recommend to ONLY use this pendant on machines that have hard limits working in all directions. For safety reason of course. I haven't pinpointed the issue to either wifi pendant, ugs, grbl or esp pendant.
+* Very rarely jogging stops responding. It start moving and then it doesn't stop. Cancel button doesn't work, it jogs until it hits hard limit switch. For that reason I would strongly recommend to ONLY use this pendant on machines that have hard limits working in all directions. For safety reason of course. I haven't pinpointed the issue to either wifi pendant, ugs, grbl or esp pendant. - On new pendant and USB communication I haven't encountered this issue while testing. USB makes things MUCH MORE reliable so this things should not occur again. Requests via wifi might get delayed or lost in a transmition.
 
 
 # WARNING

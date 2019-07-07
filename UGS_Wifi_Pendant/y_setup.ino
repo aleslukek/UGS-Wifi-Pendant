@@ -7,9 +7,14 @@ void setup() {
         lcd.init();          // Should match the number provided to the constructor.
         lcd.backlight();     // Turn on the backlight.
         lcdBacklightStatus = 1;
+        #ifndef BUTTONSTOSERIAL
         if(enableSerialOutput == true) { //this will disable serial if not enabled
                 Serial.begin(115200);
         }
+        #else
+        Serial.begin(115200);
+        #endif
+
         WiFi.mode(WIFI_OFF); //Prevents reconnection issue (taking too long to connect)
         WiFi.disconnect();
         delay(100);
@@ -59,11 +64,11 @@ void setup() {
         lcd.clear();
         lcd.setCursor(0, 0);
         lcd.print(lcdMsgConnected);
-
         Serial.println(WiFi.localIP()); //IP address assigned to your ESP
         if(enableOTAUpdate == true) {
                 otaSetup(); //Prepare for OTA update;
         }
+
         timer2 = millis();
         timer3 = millis();
         if(button[15] == 0) {
@@ -79,4 +84,5 @@ void setup() {
         digitalWrite(ledSlow, LOW);
         digitalWrite(ledLaser, LOW);
         Serial.println("Setup finished");
+        delay(1000);
 }

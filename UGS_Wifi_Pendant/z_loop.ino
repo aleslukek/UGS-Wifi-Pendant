@@ -4,6 +4,7 @@
 void loop() {
         read_shift_regs(); //read button state always, even if not connected
         buttonValues = read_shift_regs();
+        //Serial.println(buttonValues);
         if(oldButtonValues != buttonValues) { //if any button was pressed, do your magic
                 buttons();
                 directionButtons();

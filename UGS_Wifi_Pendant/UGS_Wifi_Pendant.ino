@@ -1,3 +1,7 @@
+//#define OLD_PENDANT
+#define NEW_BREILERS_PENDANT
+//#define BUTTONSTOSERIAL
+
 /* Set these to your desired credentials. */
 const char *ssid = "***************";  //ENTER YOUR WIFI SETTINGS
 const char *password = "***********";
@@ -6,10 +10,13 @@ const char *password = "***********";
 /* Set two webserver local network ips for CNC. For laptop and main cnc machine. */
 #define controler1Name "PC1" //PC 1 name
 #define webserver1 "xxx.xxx.xxx.xxx" //PC 1 local ip
+#define port1 "COMX" //PC 1 GRBL arduino port name
 
 #define controler2Name "PC2" //PC 2 name
 #define webserver2 "xxx.xxx.xxx.xxx" //PC 2 local ip
+#define port2 "COMX" //PC 2 GRBL arduino port name
 
+#define localhost "http://127.0.0.1:"
 const String webserverport = "8080";
 
 //IFTTT settings
@@ -39,7 +46,7 @@ const String webserverport = "8080";
 #define autoResetAlarm false //if you want for pendant to automatically send $X when idle and alarm was triggered (not Hard Limit alarm) set true, else it will not - Default value: false
 #define autoResetStartupAlarm true //automatically send $X on startup to remove general alarm - Default value: true
 #define enableResetPhyPin false //true to enable hardware reset pin to arduino. Caution: if esp reboots it may reset arduino! Default value: false
-#define enableSerialOutput true //disable if not needed. Will make code run a small bit faster. Default value: true
+#define enableSerialOutput true //disable if not needed. Will make code run a small bit faster. If you use BUTTONSTOSERIAL it will ignore this. Default value: true
 
 // Language //
 // Uncomment language you want and comment the unwanted one

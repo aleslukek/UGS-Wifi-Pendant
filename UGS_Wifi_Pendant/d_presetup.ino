@@ -2,20 +2,20 @@
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
 #include <ESP8266HTTPClient.h>
-#include <ESP8266Ping.h>
-#include <LiquidCrystal_I2C.h>
+#include "src/ESP8266Ping/ESP8266Ping.h"
 #include <ESP8266mDNS.h>
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
+#include "src/LiquidCrystal_I2C/LiquidCrystal_I2C.h"
+#include "src/ArduinoJson-6.x/ArduinoJson.h"
 
-#define  pendatVersion  1.05
+#define  pendatVersion  1.20
 
 LiquidCrystal_I2C lcd(0x3F, 16, 2);
 #define resetPinD5 16 //D0
 
 #define ledLaser 0 //D3 - led for laser mode status (on if lasermode is on)
 #define ledSlow  14//D5 - led for speed mode status (on if slow)
-
 
 bool justSentGeneral = 0;
 bool justSentDirection = 0;
@@ -37,6 +37,7 @@ bool lcdBacklightStatus = 0;
 byte showLCD = 0;
 bool laserMode = 0;
 bool laserTest = 0;
+bool connectCNCOnce = 0; //if 0 it connects CNC to computer automagically, if not then it will not connect CNC to computer
 #define numOfStates 15
 bool cnc_state[numOfStates] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
@@ -108,9 +109,10 @@ unsigned int oldButtonValues;
 #define dataPin         12 // Connects to the Q7 pin the 165
 #define clockPin        15 // Connects to the Clock pin the 165
 
+#ifdef OLD_PENDANT //old pendant commands
 #define   GETmovexyz                "/sendGcode/?gCode=%24J%3DG21G91"
 #define   GETresetzero              "/sendGcode/?gCode=G10%20P0%20L20%20X0%20Y0%20Z0"
-#define   GETresetZzero             "/sendGcode/?gCode=G10%20P0%20L20%20Z0.0000"
+#define   GETresetZzero             "/sendGcode/?gCode=G10%20P0%20L20%20Z"
 #define   GETreturntozero           "/sendGcode/?gCode=RETURN_TO_ZERO"
 #define   GETmoveToZeroZslowly      "/sendGcode/?gCode=G1%20G90%20Z0%20F50" //return to Z0 slowly
 #define   GETmoveToZeroZquickly     "/sendGcode/?gCode=G1%20G90%20Z0%20F500" //return to X0 quickly
@@ -121,7 +123,6 @@ unsigned int oldButtonValues;
 #define   GETdisablealarmlock       "/sendGcode/?gCode=%24X"
 #define   GETtogglecheckmode        "/sendGcode/?gCode=%24C"
 #define   GETsoftreset              "/sendGcode/?gCode=%24C" //run toggle check mode twice in a row
-//#define   GETsoftreset              "/sendGcode/?gCode=%24C" //^X, 0x18, ctrl-x doesnt work. So physical pin is needed for hard limit alarm
 #define   GETspindleON              "/sendGcode/?gCode=M8"
 #define   GETspindleOFF             "/sendGcode/?gCode=M9"
 #define   GETpause                  "/sendGcode/?gCode=PAUSE_RESUME_FILE"
@@ -137,6 +138,47 @@ unsigned int oldButtonValues;
 #define   GETmoveLeftABit           "/sendGcode/?gCode=G1%20G91%20X-0.1%20F5000" //move relative 0.1 mm to left
 #define   GETmoveRightABit          "/sendGcode/?gCode=G1%20G91%20X0.1%20F5000" //move relative 0.1 mm to right
 
+#else
+//New Breiler's Pendant
+#define   GEThomingcycle            "/api/v1/machine/homeMachine"
+#define   GETconnect                "/api/v1/machine/connect"
+#define   GETdisconnect             "/api/v1/machine/disconnect"
+#define   POSTSelectUSBPort         "api/v1/machine/setSelectedPort?port="
+#define   GETdisablealarmlock       "/api/v1/machine/killAlarm"
+#define   GETresetzero              "/api/v1/machine/resetToZero"
+#define   GETsoftreset              "/api/v1/machine/softReset"
+#define   GETpause                  "/api/v1/files/pause"
+#define   GETcancel                 "/api/v1/files/cancel"
+#define   GETcancelJob              "/api/v1/files/cancel"
+#define   GETsystemState            "/api/v1/status/getStatus"
+#define   GETsettings               "/api/v1/settings/getSettings"
+#define   POSTgcode                 "/api/v1/machine/sendGcode"
+#define   POSTsendResume            "/api/v1/files/send"
+#define   POSTmovexyz               "$J=G21 G91"
+#define   POSTresetZzero            "G10 P0 L20 Z"
+#define   POSTresetZzero0           "G10 P0 L20 Z0.000"
+#define   GETreturntozero           "/sendGcode/?gCode=RETURN_TO_ZERO"
+#define   GETmoveToZeroZslowly      "G1 G90 Z0 F50" //return to Z0 slowly
+#define   GETmoveToZeroZquickly     "G1 G90 Z0 F500" //return to X0 quickly
+#define   GETmoveToZeroXYslowly     "G1 G90 X0 Y0 F500" //return to XY slowly
+#define   GETmoveToZeroXYquickly    "G1 G90 X0 Y0 F5000" //return to XY quickly
+#define   GETreturntoworkspace      "G0 G90 X0 Y0 Z0"
+#define   GETtogglecheckmode        "$C"
+#define   GETtoggleLaser2On         "$32=1"
+#define   GETtoggleLaser2Off        "$32=0"
+#define   GETspindleON              "M8"
+#define   GETspindleOFF             "M9"
+#define   GETlaserTestPower         "M4 S0.8" //Run test as M04 Sxx (xx are laserTestStrength) - this will only turn on laser, but not fire it yet, since G1 command is not issued
+#define   GETlaserTestOn            "M3 S0.8" //Run test as M04 Sxx (xx are laserTestStrength) - this will only turn on laser, but not fire it yet, since G1 command is not issued
+#define   GETlaserTestOff           "M5" //Turn off M4 with M05
+#define   GETmoveLeftABit           "G1 G91 X-0.1 F5000" //move relative 0.1 mm to left
+#define   GETmoveRightABit          "G1 G91 X0.1 F5000" //move relative 0.1 mm to right
+String filenameJson;
+#endif
+
+
+
+
 bool shiftStatus = 0;
 bool prevShiftStatus = 0;
 bool directionStatusX = 0;
@@ -144,6 +186,7 @@ bool directionStatusY = 0;
 bool directionStatusZ = 0;
 bool directionStatus = 0;
 String webserver;
+String USBport;
 
 //
 bool iftttSend = 0;
@@ -157,7 +200,7 @@ void buttons();
 void directionButtons();
 void displayLCD();
 void getCommandGeneral(String getCommand);
-void getDirection(int xdirection, int ydirection, int zdirection, bool slow = 0);
+int getSendCommand(String getUrl);
 void iftttMessage(String message);
 void maintanance();
 void parseString(String pendantPayload);
@@ -169,3 +212,14 @@ unsigned int read_shift_regs();
 void reConnectToWifi();
 void serialPrintInfo();
 void zAxisProbe();
+#ifndef OLD_PENDANT
+void connectCNC();
+void postSendGcode();
+void postDirection(int xdirection, int ydirection, int zdirection, bool slow);
+#endif
+#ifdef BUTTONSTOSERIAL
+void sendCommandViaSerial(String getUrl, bool postOrGet = 0, String postContent = "postContent");
+#endif
+#ifdef OLD_PENDANT
+void getDirection(int xdirection, int ydirection, int zdirection, bool slow = 0);
+#endif

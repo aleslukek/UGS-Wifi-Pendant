@@ -11,7 +11,7 @@ void maintanance(){
         }
         if(abs(millis() - timerlcd) > jumpSign) { //jump to next sign after jumpSign ms
                 showLCD++;
-                if(showLCD > 7) {
+                if(showLCD > 6) {
                         showLCD = 0;
                 }
                 timerlcd = millis();
@@ -28,9 +28,19 @@ void maintanance(){
 
         if(button[15] == 0) {
                 webserver = webserver1;//check if PC 1 is available
+                if(USBport != USBport1) { //button toggled, enable auto USB CNC connect
+                        connectCNCOnce = 0;
+                }
+                USBport = USBport1;
         }else if(button[15] == 1) {
                 webserver = webserver2;//check if PC 2 is available
+                if(USBport != USBport2) { //button toggled, enable auto USB CNC connect
+                        connectCNCOnce = 0;
+                }
+                USBport = USBport2;
+
         }
+
 
         if(disableAlarmLockLogic == 1 && cnc_state[4] == 1 && autoResetStartupAlarm == true) { //run $X on first connect if idle, and if autoResetStartupAlarm is true
                 disableAlarmLockLogic = 0;
@@ -48,21 +58,29 @@ void maintanance(){
                 if(laserMode == 1 && ledLaserStatus == 0) { //turn on laser mode led
                         digitalWrite(ledLaser, HIGH);
                         ledLaserStatus = 1;
+                        #ifndef BUTTONSTOSERIAL
                         Serial.println("Laser mode is on!");
+                        #endif
                 }else if(laserMode == 0 && ledLaserStatus == 1) { //turn off laser mode Led
                         digitalWrite(ledLaser, LOW);
                         ledLaserStatus = 0;
+                        #ifndef BUTTONSTOSERIAL
                         Serial.println("Laser mode is off!");
+                        #endif
                 }
 
                 if(button[11] == 1 && ledSlowStatus == 0) { //turn on slow speed mode led - speed toggle pressed
                         digitalWrite(ledSlow, HIGH);
                         ledSlowStatus = 1;
+                        #ifndef BUTTONSTOSERIAL
                         Serial.println("Slow speed mode is on!");
+                        #endif
                 }else if(button[11] == 0 && ledSlowStatus == 1) { //turn off slow speed mode Led - speed toggle de-pressed
                         digitalWrite(ledSlow, LOW);
                         ledSlowStatus = 0;
+                        #ifndef BUTTONSTOSERIAL
                         Serial.println("Slow speed mode is off!");
+                        #endif
                 }
         }
 
@@ -81,60 +99,18 @@ void maintanance(){
 
 
 
-
+#ifdef OLD_PENDANT
 //=======================================================================
-//                    Parse UGS data
+//                    Parse UGS data OLD PENDANT
 //=======================================================================
 void parseString(String pendantPayload){
-        // Length (with one extra character for the null terminator)
-        int pendantPayload_len = pendantPayload.length() + 1;
-
-        // Prepare the character array (the buffer)
-        char StringToChar[pendantPayload_len];
-        pendantPayload.toCharArray(StringToChar, pendantPayload_len);
-        for(byte n = 0; n < 18; n++) {
-                for(byte m = 0; m < varLength; m++) { //fills file name array to SPACE character, so if it changes it doesn't stay the sam as the last one
-                        variable[n][m] = 0;
-                }
-        }
+        DynamicJsonDocument doc(1024);
         //Serial.println(pendantPayload);
-        bool newvar = 0;
-        int i = 0, j = -1, k = 0;
-        bool skippedLatestComment = 0;
-        //for(int i = 0, j = -1, k = 0; i < pendantPayload_len; i++) {
-        while(StringToChar[i] != 125) {//while the character is not }
-                if(StringToChar[i] == 58 && StringToChar[i+1] == 34) {// 58 = :, 34 = "
-                        newvar = 1;//start saving to array in next iteration
-                        k = 0;//variable char array index
-                        j++;//array index
-                }else if(j == 1 && StringToChar[i] == 108 && StringToChar[i+1] == 97 && StringToChar[i+2] == 116 && StringToChar[i+3] == 101 && StringToChar[i+4] == 115 && StringToChar[i+5] == 116 && StringToChar[i+6] == 67 && StringToChar[i+7] == 111 && StringToChar[i+8] == 109 && StringToChar[i+9] == 109 && StringToChar[i+10] == 101 && StringToChar[i+11] == 110 && StringToChar[i+12] == 116 && StringToChar[i+13] == 34 && StringToChar[i+14] == 58 ) { // if there is latest comment (checks if there are letters "latestComment":"), skip to active state, don't save comment
-                        while(StringToChar[i] != 34 && StringToChar[i+1] != 44) { //search until ",
-                                i++;
-                        }
-                        j--;
-                        skippedLatestComment = 1; //so it doesn't overwrite file name array
-                }else if(StringToChar[i] == 44) {// 44 = ,
-                        newvar = 0;//stop saving to array until next :
-                        k = 0;//variable char array index
-                }
-                if(newvar == 1 && ((StringToChar[i] > 47 && StringToChar[i] < 58) || (StringToChar[i] > 65 && StringToChar[i] < 91) || (StringToChar[i] > 96 && StringToChar[i] < 123) || StringToChar[i] == 45 || StringToChar[i] == 46 || StringToChar[i] == 95 || StringToChar[i] == 43 || StringToChar[i] == 40 || StringToChar[i] == 41 || (j == 1 && StringToChar[i] == 32)) && StringToChar[i] != 125 && StringToChar[i] != 123) {//save only small caps, high caps, +, -, . (, )
-                        //save var to array
-                        if(j == 1 && skippedLatestComment == 1) { //skip
+        deserializeJson(doc, pendantPayload);
+        JsonObject obj = doc.as<JsonObject>();
 
-                        }else{ //save
-                                variable[j][k] = StringToChar[i];
-                        }
-                        k++;
-                        if(k >= varLength - 1) {
-                                k = varLength - 1;
-                        }
-                }else{
-                        k = 0;
-                }
-                i++;
-        }
         //change non text variables into numbers
-        if(pendantPayload.indexOf("COMM_IDLE") > 0) {
+        if(obj[String("controlState")] ==  "COMM_IDLE") {
                 cnc_state[0] = 0;
                 cnc_state[1] = 0;
                 cnc_state[2] = 0;
@@ -147,7 +123,7 @@ void parseString(String pendantPayload){
                 directionStatusX = 0;
                 directionStatusY = 0;
                 directionStatusZ = 0;
-                if(pendantPayload.indexOf("Alarm") > 0) {
+                if(obj[String("activeState")] ==  "Alarm") {
                         cnc_state[9] = 1;
                         turnOnLCD = 1;
                         if(autoResetAlarm == true) {
@@ -157,18 +133,18 @@ void parseString(String pendantPayload){
                                 iftttMessage(iftttMessageGeneralAlarm);
                         }
 
-                }else if(pendantPayload.indexOf("ALARM:1 (Hard limit)") > 0) {
+                }else if(obj[String("activeState")] ==  "ALARM:1 (Hard limit)") {
                         cnc_state[8] = 1;
                         turnOnLCD = 1;
                         if(iftttSend == 1) {
                                 iftttMessage(iftttMessageHardAlarm);
                         }
-                }else if(pendantPayload.indexOf("Sleep") > 0) {
+                }else if(obj[String("activeState")] ==  "Sleep") {
                         cnc_state[10] = 1;
                         if(iftttSend == 1) {
                                 iftttMessage(iftttMessageSleeping);
                         }
-                }else if(pendantPayload.indexOf("Idle") > 0) {
+                }else if(obj[String("activeState")] ==  "Idle") {
                         cnc_state[8] = 0;
                         cnc_state[9] = 0;
                         cnc_state[10] = 0;
@@ -178,7 +154,7 @@ void parseString(String pendantPayload){
                         zAxisProbe();
                 }
                 iftttSend = 0;
-        }else if(pendantPayload.indexOf("COMM_SENDING_PAUSED") > 0) {
+        }else if(obj[String("controlState")] ==  "COMM_SENDING_PAUSED") {
                 turnOnLCD = 1;
                 cnc_state[0] = 0;
                 cnc_state[1] = 0;
@@ -192,7 +168,7 @@ void parseString(String pendantPayload){
                 cnc_state[12] = 1;
                 cnc_state[13] = 1;
                 cnc_state[14] = 1;
-        }else if(pendantPayload.indexOf("COMM_SENDING") > 0) {
+        }else if(obj[String("controlState")] ==  "COMM_SENDING") {
                 turnOnLCD = 1;
                 cnc_state[0] = 0;
                 cnc_state[1] = 0;
@@ -204,7 +180,7 @@ void parseString(String pendantPayload){
                 cnc_state[12] = 1;
                 cnc_state[13] = 1;
                 cnc_state[14] = 1;
-                if(pendantPayload.indexOf("Run") > 0) {//Job running
+                if(obj[String("activeState")] ==  "Run") {//Job running
                         cnc_state[5] = 1;
                         cnc_state[7] = 0;
                         iftttSend = 1; //when status changes it should send a notification. So when it stops running it means it finished or something went wrong.
@@ -213,7 +189,7 @@ void parseString(String pendantPayload){
                         cnc_state[7] = 1;
                         iftttSend = 0;
                 }
-        }else if(pendantPayload.indexOf("COMM_DISCONNECTED") > 0) {
+        }else if(obj[String("controlState")] ==  "COMM_DISCONNECTED") {
                 cnc_state[0] = 0;
                 cnc_state[1] = 0;
                 cnc_state[2] = 0;
@@ -230,25 +206,25 @@ void parseString(String pendantPayload){
                 cnc_state[13] = 0;
                 cnc_state[14] = 0;
         }
-        workx = atof(variable[3]);
-        worky = atof(variable[4]);
-        workz = atof(variable[5]);
-        machinex = atof(variable[6]);
-        machiney = atof(variable[7]);
-        machinez = atof(variable[8]);
-        rowsInFile = atoi(variable[9]);
+        workx = obj["workX"];
+        worky = obj["workY"];
+        workz = obj["workZ"];
+        machinex = obj["machineX"];
+        machiney = obj["machineY"];
+        machinez = obj["machineZ"];
+        rowsInFile = obj["rowsInFile"];
         if(rowsInFile < 0) {
                 rowsInFile = 0;
         }
-        sentRows = atoi(variable[10]);
+        sentRows = obj["sentRows"];
         if(sentRows < 0) {
                 sentRows = 0;
         }
-        remainingRows = atoi(variable[11]);
+        remainingRows = obj["remainingRows"];
         if(remainingRows < 0) {
                 remainingRows = 0;
         }
-        duration = atoi(variable[13]);
+        duration = obj["duration"];
         if(duration < 0) {
                 duration = 0;
         }
@@ -266,18 +242,18 @@ void parseString(String pendantPayload){
         }else{
                 rowProgress = 0;
         }
-        if(variable[14][0] == 116) {
+        if(obj["sendButtonEnabled"] == "true") {
                 cnc_state[11] = 1;
         }else{
                 cnc_state[11] = 0;
         }
-        if(variable[15][0] == 116) {
+        if(obj["pauseResumeButtonEnabled"] == "true") {
                 cnc_state[12] = 1;
         }else{
                 cnc_state[12] = 0;
         }
 
-        if(variable[16][0] == 116) {
+        if(obj["cancelButtonEnabled"] == "true") {
                 cnc_state[13] = 1;
         }else{
                 cnc_state[13] = 0;
@@ -285,7 +261,196 @@ void parseString(String pendantPayload){
         displayLCD();
         return;
 }
+#else
 
+
+
+//=======================================================================
+//                    Parse UGS data NEW PENDANT
+//=======================================================================
+void parseString(String pendantPayload){
+        DynamicJsonDocument doc(1024);
+        //Serial.println(pendantPayload);
+        deserializeJson(doc, pendantPayload);
+        JsonObject obj = doc.as<JsonObject>();
+
+        if(obj[String("state")] == "DISCONNECTED") {
+                cnc_state[0] = 0;
+                cnc_state[1] = 0;
+                cnc_state[2] = 0;
+                cnc_state[3] = 0;
+                cnc_state[4] = 0;
+                cnc_state[5] = 0;
+                cnc_state[6] = 0;
+                cnc_state[7] = 0;
+                cnc_state[8] = 0;
+                cnc_state[9] = 0;
+                cnc_state[10] = 0;
+                cnc_state[11] = 0;
+                cnc_state[12] = 0;
+                cnc_state[13] = 0;
+                cnc_state[14] = 0;
+                if(connectCNCOnce == 0 || enableAutoConnectCNC == true) {
+                        connectCNC();
+                }
+        }else if(obj[String("state")] == "IDLE") {
+                cnc_state[0] = 0;
+                cnc_state[1] = 0;
+                cnc_state[2] = 0;
+                cnc_state[3] = 1;
+                cnc_state[4] = 1;
+                cnc_state[5] = 0;
+                cnc_state[6] = 0;
+                cnc_state[7] = 0;
+                cnc_state[8] = 0;
+                cnc_state[9] = 0;
+                cnc_state[10] = 0;
+                cnc_state[14] = 0;
+                directionStatusX = 0;
+                directionStatusY = 0;
+                directionStatusZ = 0;
+                if(resetZAxisAfterProbe == 1) {
+                        zAxisProbe();
+                }
+                iftttSend = 0;
+                connectCNCOnce = 1;
+        }else if(obj[String("state")] == "ALARM") {
+                cnc_state[0] = 0;
+                cnc_state[1] = 0;
+                cnc_state[2] = 0;
+                cnc_state[3] = 1;
+                cnc_state[4] = 1;
+                cnc_state[5] = 0;
+                cnc_state[6] = 0;
+                cnc_state[7] = 0;
+                cnc_state[9] = 0;
+                cnc_state[10] = 0;
+                cnc_state[14] = 0;
+                directionStatusX = 0;
+                directionStatusY = 0;
+                directionStatusZ = 0;
+                cnc_state[8] = 1;
+                turnOnLCD = 1;
+                if(iftttSend == 1) {
+                        iftttMessage(iftttMessageHardAlarm);
+                }
+                connectCNCOnce = 1;
+        }else if(obj[String("state")] == "JOG" || obj[String("state")] == "HOME") {
+                turnOnLCD = 1;
+                cnc_state[0] = 0;
+                cnc_state[1] = 0;
+                cnc_state[2] = 0;
+                cnc_state[3] = 1;
+                cnc_state[4] = 0;
+                cnc_state[6] = 0;
+                cnc_state[10] = 0;
+                cnc_state[12] = 1;
+                cnc_state[13] = 1;
+                cnc_state[14] = 1;
+                cnc_state[5] = 0;
+                cnc_state[7] = 1;
+                cnc_state[8] = 0;
+                cnc_state[9] = 0;
+                cnc_state[10] = 0;
+                iftttSend = 0;
+        }else if(obj[String("state")] == "RUN") {
+                turnOnLCD = 1;
+                cnc_state[0] = 0;
+                cnc_state[1] = 0;
+                cnc_state[2] = 0;
+                cnc_state[3] = 1;
+                cnc_state[4] = 0;
+                cnc_state[6] = 0;
+                cnc_state[10] = 0;
+                cnc_state[12] = 1;
+                cnc_state[13] = 1;
+                cnc_state[14] = 1;
+                cnc_state[5] = 1;
+                cnc_state[7] = 0;
+                iftttSend = 1; //when status changes it should send a notification. So when it stops running it means it finished or something went wrong.
+        }else if(obj[String("state")] == "HOLD") {
+                turnOnLCD = 1;
+                cnc_state[0] = 0;
+                cnc_state[1] = 0;
+                cnc_state[2] = 0;
+                cnc_state[3] = 1;
+                cnc_state[4] = 0;
+                cnc_state[5] = 1;
+                cnc_state[6] = 1;
+                cnc_state[7] = 0;
+                cnc_state[10] = 0;
+                cnc_state[12] = 1;
+                cnc_state[13] = 1;
+                cnc_state[14] = 1;
+        }else if(obj[String("state")] == "SLEEP") {
+                cnc_state[0] = 0;
+                cnc_state[1] = 0;
+                cnc_state[2] = 0;
+                cnc_state[3] = 1;
+                cnc_state[4] = 1;
+                cnc_state[5] = 0;
+                cnc_state[6] = 0;
+                cnc_state[7] = 0;
+                cnc_state[14] = 0;
+                directionStatusX = 0;
+                directionStatusY = 0;
+                directionStatusZ = 0;
+                cnc_state[10] = 1;
+                if(iftttSend == 1) {
+                        iftttMessage(iftttMessageSleeping);
+                }
+        }
+
+        String workXZY = obj[String("workCoord")];
+        String machineXYZ = obj[String("machineCoord")];
+        DynamicJsonDocument doc2(256);
+        deserializeJson(doc2, workXZY);
+        JsonObject obj2 = doc2.as<JsonObject>();
+        workx = obj2["x"];
+        worky = obj2["y"];
+        workz = obj2["z"];
+        DynamicJsonDocument doc3(256);
+        deserializeJson(doc3, machineXYZ);
+        JsonObject obj3 = doc3.as<JsonObject>();
+        machinex = obj3["x"];
+        machiney = obj3["y"];
+        machinez = obj3["z"];
+
+        sentRows = obj["completedRowCount"];
+        if(sentRows < 0) {
+                sentRows = 0;
+        }
+        rowsInFile = obj["rowCount"];
+        if(rowsInFile < 0) {
+                rowsInFile = 0;
+        }
+        remainingRows = obj["remainingRowCount"];
+        if(remainingRows < 0) {
+                remainingRows = 0;
+        }
+        //filenameJson = obj[String("fileName")];
+        if(rowsInFile != 0) {
+                rowProgress = (float)sentRows / ((float)sentRows + (float)remainingRows) * 100; //if there are empty rows they are not subtracted from total rows in file, so this is why you don't use that number
+        }else{
+                rowProgress = 0;
+        }
+        duration = obj["sendDuration"];
+        if(duration < 0) {
+                duration = 0;
+        }
+
+        if(sentRows != 0) { //If this is not there ESP goes wild into reboot cycle. It can't divide by 0.
+                timeRemaining = ((float)duration / (float)sentRows) * remainingRows; //Estemated time remaining, based on time duration, sent rows and remaining rows
+        }else{
+                timeRemaining = 0;
+        }
+        if(timeRemaining < 0) {
+                timeRemaining = 0;
+        }
+        displayLCD();
+        return;
+}
+#endif
 
 
 
@@ -293,6 +458,15 @@ void parseString(String pendantPayload){
 //                    Print debug output via serial
 //=======================================================================
 void printSerialDebug(byte mode){
+        #ifndef DEBUG
+        mode = 255;
+        return;
+        #endif
+        #ifdef BUTTONSTOSERIAL
+        mode = 254;
+        return;
+        #endif
+
         if(mode == 0) { //print buttons
                 Serial.println("Button status:  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16");
                 Serial.print("Button status:  ");
@@ -306,6 +480,7 @@ void printSerialDebug(byte mode){
                 return;
         }else if(mode == 1) { //print machine status
                 Serial.println();
+                #ifdef OLD_PENDANT
                 Serial.print("workx: ");
                 Serial.println(workx);
                 Serial.print("worky: ");
@@ -318,6 +493,7 @@ void printSerialDebug(byte mode){
                 Serial.println(machiney);
                 Serial.print("machinez: ");
                 Serial.println(machinez);
+                #endif
                 Serial.print("rowsInFile: ");
                 Serial.println(rowsInFile);
                 Serial.print("sentRows: ");
@@ -330,12 +506,14 @@ void printSerialDebug(byte mode){
                 Serial.println(duration);
                 Serial.print("rowProgress: ");
                 Serial.println(rowProgress);
+                #ifdef OLD_PENDANT
                 Serial.print("cnc_state[11]: ");
                 Serial.println(cnc_state[11]);
                 Serial.print("cnc_state[12]: ");
                 Serial.println(cnc_state[12]);
                 Serial.print("cnc_state[13]: ");
                 Serial.println(cnc_state[13]);
+                #endif
                 return;
         }else if(mode == 2) {
                 if(cycleCounter % 100 == 0) {
@@ -459,7 +637,6 @@ void serialPrintInfo(){ //Prints some general info on startup
         Serial.println("=======================================================================");
         Serial.println();
 }
-
 
 
 

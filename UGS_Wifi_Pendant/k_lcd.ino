@@ -4,21 +4,19 @@
 void displayLCD(){
         if(justSentMsgDisplay == 1) {//something was pressed, display what was it
                 if(buttonPressMsg == 0) {
-                        Serial.println("Homing cnc");
-                        lcd.clear();
-                        lcd.setCursor(0, 0);
-                        lcd.print(lcdMsgZeroing);
-                        lcd.setCursor(0, 1);
-                        lcd.print(lcdMsgOfSystem);
                         buttonPressMsg = 255;
                 }else if(buttonPressMsg == 1) {
+                        #ifndef BUTTONSTOSERIAL
                         Serial.println("Probing");
+                        #endif
                         lcd.clear();
                         lcd.setCursor(0, 0);
                         lcd.print(lcdMsgProbingZ);
                         buttonPressMsg = 255;
                 }else if(buttonPressMsg == 2) {
+                        #ifndef BUTTONSTOSERIAL
                         Serial.println("Reset XYZ");
+                        #endif
                         lcd.clear();
                         lcd.setCursor(0, 0);
                         lcd.print(lcdMsgResetXYZ);
@@ -26,7 +24,9 @@ void displayLCD(){
                         lcd.print(lcdMsgWorkingAxis);
                         buttonPressMsg = 255;
                 }else if(buttonPressMsg == 3) {
+                        #ifndef BUTTONSTOSERIAL
                         Serial.println("Reset Z");
+                        #endif
                         lcd.clear();
                         lcd.setCursor(0, 0);
                         lcd.print(lcdMsgResetZ);
@@ -34,25 +34,33 @@ void displayLCD(){
                         lcd.print(lcdMsgWorkingAxis2);
                         buttonPressMsg = 255;
                 }else if(buttonPressMsg == 4) {
+                        #ifndef BUTTONSTOSERIAL
                         Serial.println("Pause");
+                        #endif
                         lcd.clear();
                         lcd.setCursor(0, 0);
                         lcd.print(lcdMsgPause);
                         buttonPressMsg = 255;
                 }else if(buttonPressMsg == 5) {
+                        #ifndef BUTTONSTOSERIAL
                         Serial.println("Reset alarm");
+                        #endif
                         lcd.clear();
                         lcd.setCursor(0, 0);
                         lcd.print(lcdMsgResetAlarm);
                         buttonPressMsg = 255;
                 }else if(buttonPressMsg == 6) {
+                        #ifndef BUTTONSTOSERIAL
                         Serial.println("Cancel");
+                        #endif
                         lcd.clear();
                         lcd.setCursor(0, 0);
                         lcd.print(lcdMsgCancel);
                         buttonPressMsg = 255;
                 }else if(buttonPressMsg == 7) {
+                        #ifndef BUTTONSTOSERIAL
                         Serial.println("Soft reset");
+                        #endif
                         lcd.clear();
                         lcd.setCursor(0, 0);
                         lcd.print(lcdMsgResetSystem);
@@ -60,43 +68,67 @@ void displayLCD(){
                         lcd.print(lcdMsgArduino);
                         buttonPressMsg = 255;
                 }else if(buttonPressMsg == 8) {
+                        #ifndef BUTTONSTOSERIAL
                         Serial.println("Resume job");
+                        #endif
                         lcd.clear();
                         lcd.setCursor(0, 0);
                         lcd.print(lcdMsgContinue);
                         buttonPressMsg = 255;
                 }else if(buttonPressMsg == 9) {
+                        #ifndef BUTTONSTOSERIAL
                         Serial.println("Start job");
+                        #endif
                         lcd.clear();
                         lcd.setCursor(0, 0);
                         lcd.print(lcdMsgStartaJob);
                         buttonPressMsg = 255;
                 }else if(buttonPressMsg == 10) {
+                        #ifndef BUTTONSTOSERIAL
                         Serial.println("Return to XY zero (quickly)");
+                        #endif
                         lcd.clear();
                         lcd.setCursor(0, 0);
                         lcd.print(lcdMsgReturnToXYzero);
                         buttonPressMsg = 255;
                 }else if(buttonPressMsg == 11) {
+                        #ifndef BUTTONSTOSERIAL
                         Serial.println("Return to XY zero (slowly)");
+                        #endif
                         lcd.clear();
                         lcd.setCursor(0, 0);
                         lcd.print(lcdMsgReturnToXYzero);
                         buttonPressMsg = 255;
                 }else if(buttonPressMsg == 12) {
+                        #ifndef BUTTONSTOSERIAL
                         Serial.println("Return to Z zero (quickly)");
+                        #endif
                         lcd.clear();
                         lcd.setCursor(0, 0);
                         lcd.print(lcdMsgReturnToZzero);
                         buttonPressMsg = 255;
                 }else if(buttonPressMsg == 13) {
+                        #ifndef BUTTONSTOSERIAL
                         Serial.println("Return to Z zero (slowly)");
+                        #endif
                         lcd.clear();
                         lcd.setCursor(0, 0);
                         lcd.print(lcdMsgReturnToZzero);
                         buttonPressMsg = 255;
+                }if(buttonPressMsg == 14) {
+                        #ifndef BUTTONSTOSERIAL
+                        Serial.println("Homing cnc");
+                        #endif
+                        lcd.clear();
+                        lcd.setCursor(0, 0);
+                        lcd.print(lcdMsgZeroing);
+                        lcd.setCursor(0, 1);
+                        lcd.print(lcdMsgOfSystem);
+                        buttonPressMsg = 255;
                 }else if(buttonPressMsg == 108) {
+                        #ifndef BUTTONSTOSERIAL
                         Serial.println("Move Y-");
+                        #endif
                         lcd.clear();
                         lcd.setCursor(0, 0);
                         lcd.print(lcdMsgMoveYback);
@@ -104,7 +136,9 @@ void displayLCD(){
                         lcd.print(lcdMsgFYminus);
                         buttonPressMsg = 255;
                 }else if(buttonPressMsg == 109) {
+                        #ifndef BUTTONSTOSERIAL
                         Serial.println("Move Y- slowly");
+                        #endif
                         lcd.clear();
                         lcd.setCursor(0, 0);
                         lcd.print(lcdMsgMoveYback);
@@ -112,7 +146,9 @@ void displayLCD(){
                         lcd.print(lcdMsgSYminus);
                         buttonPressMsg = 255;
                 }else if(buttonPressMsg == 110) {
+                        #ifndef BUTTONSTOSERIAL
                         Serial.println("Move Y+");
+                        #endif
                         lcd.clear();
                         lcd.setCursor(0, 0);
                         lcd.print(lcdMsgMoveYforward);
@@ -120,7 +156,9 @@ void displayLCD(){
                         lcd.print(lcdMsgFYplus);
                         buttonPressMsg = 255;
                 }else if(buttonPressMsg == 111) {
+                        #ifndef BUTTONSTOSERIAL
                         Serial.println("Move Y+ slowly");
+                        #endif
                         lcd.clear();
                         lcd.setCursor(0, 0);
                         lcd.print(lcdMsgMoveYforward);
@@ -128,7 +166,9 @@ void displayLCD(){
                         lcd.print(lcdMsgSYplus);
                         buttonPressMsg = 255;
                 }else if(buttonPressMsg == 112) {
+                        #ifndef BUTTONSTOSERIAL
                         Serial.println("Move X-");
+                        #endif
                         lcd.clear();
                         lcd.setCursor(0, 0);
                         lcd.print(lcdMsgMoveXLeft);
@@ -136,7 +176,9 @@ void displayLCD(){
                         lcd.print(lcdMsgFXminus);
                         buttonPressMsg = 255;
                 }else if(buttonPressMsg == 113) {
+                        #ifndef BUTTONSTOSERIAL
                         Serial.println("Move X- slowly");
+                        #endif
                         lcd.clear();
                         lcd.setCursor(0, 0);
                         lcd.print(lcdMsgMoveXLeft);
@@ -144,7 +186,9 @@ void displayLCD(){
                         lcd.print(lcdMsgSXminus);
                         buttonPressMsg = 255;
                 }else if(buttonPressMsg == 114) {
+                        #ifndef BUTTONSTOSERIAL
                         Serial.println("Move X+");
+                        #endif
                         lcd.clear();
                         lcd.setCursor(0, 0);
                         lcd.print(lcdMsgMoveYRight);
@@ -152,7 +196,9 @@ void displayLCD(){
                         lcd.print(lcdMsgFXplus);
                         buttonPressMsg = 255;
                 }else if(buttonPressMsg == 115) {
+                        #ifndef BUTTONSTOSERIAL
                         Serial.println("Move X+ slowly");
+                        #endif
                         lcd.clear();
                         lcd.setCursor(0, 0);
                         lcd.print(lcdMsgMoveYRight);
@@ -160,7 +206,9 @@ void displayLCD(){
                         lcd.print(lcdMsgSXplus);
                         buttonPressMsg = 255;
                 }else if(buttonPressMsg == 116) {
+                        #ifndef BUTTONSTOSERIAL
                         Serial.println("Move Z-");
+                        #endif
                         lcd.clear();
                         lcd.setCursor(0, 0);
                         lcd.print(lcdMsgMoveZdown);
@@ -168,7 +216,9 @@ void displayLCD(){
                         lcd.print(lcdMsgFZminus);
                         buttonPressMsg = 255;
                 }else if(buttonPressMsg == 117) {
+                        #ifndef BUTTONSTOSERIAL
                         Serial.println("Move Z- slowly");
+                        #endif
                         lcd.clear();
                         lcd.setCursor(0, 0);
                         lcd.print(lcdMsgMoveZdown);
@@ -176,7 +226,9 @@ void displayLCD(){
                         lcd.print(lcdMsgSZminus);
                         buttonPressMsg = 255;
                 }else if(buttonPressMsg == 118) {
+                        #ifndef BUTTONSTOSERIAL
                         Serial.println("Move Z+");
+                        #endif
                         lcd.clear();
                         lcd.setCursor(0, 0);
                         lcd.print(lcdMsgMoveZup);
@@ -184,7 +236,9 @@ void displayLCD(){
                         lcd.print(lcdMsgFZplus);
                         buttonPressMsg = 255;
                 }else if(buttonPressMsg == 119) {
+                        #ifndef BUTTONSTOSERIAL
                         Serial.println("Move Z+ slowly");
+                        #endif
                         lcd.clear();
                         lcd.setCursor(0, 0);
                         lcd.print(lcdMsgMoveZup);
@@ -192,7 +246,9 @@ void displayLCD(){
                         lcd.print(lcdMsgSZplus);
                         buttonPressMsg = 255;
                 }else if(buttonPressMsg == 120) {
+                        #ifndef BUTTONSTOSERIAL
                         Serial.println("Job running, cannot press this button!");
+                        #endif
                         lcd.clear();
                         lcd.setCursor(0, 0);
                         lcd.print(lcdMsgCNCjobButton);
@@ -200,7 +256,9 @@ void displayLCD(){
                         lcd.print(lcdMsgIsDisabled);
                         buttonPressMsg = 255;
                 }else if(buttonPressMsg == 31) {
+                        #ifndef BUTTONSTOSERIAL
                         Serial.println("Z Probe error. Check what happened.");
+                        #endif
                         lcd.clear();
                         lcd.setCursor(0, 0);
                         lcd.print(lcdMsgErrorW);
@@ -213,7 +271,9 @@ void displayLCD(){
                 return;
         }else{//nothing was pressed, display status
                 if(cnc_state[0] == 1 && cnc_state[1] == 0 && cnc_state[2] == 0 && cnc_state[3] == 0) {//esp wifi not connected
+                        #ifndef BUTTONSTOSERIAL
                         Serial.println("Internet cannot be reached.");
+                        #endif
                         lcd.clear();
                         lcd.setCursor(0, 0);
                         lcd.print(lcdMsgNoConn);
@@ -224,23 +284,33 @@ void displayLCD(){
                         if(button[15] == 0) {
                                 lcd.setCursor(0,0);
                                 lcd.print(controler1Name);
+                                #ifndef BUTTONSTOSERIAL
                                 Serial.println("CNC PC 1 not available.");
+                                #endif
                         }else{
+
                                 lcd.setCursor(0,0);
                                 lcd.print(controler2Name);
+                                #ifndef BUTTONSTOSERIAL
                                 Serial.println("CNC PC 2 not available.");
-                        }
+                              #endif
+
                         lcd.setCursor(0, 1);
                         lcd.print(lcdMsgNAvailable);
+                      }
                 }else if(cnc_state[0] == 0 && cnc_state[1] == 0 && cnc_state[2] == 1 && cnc_state[3] == 0) {//PC available, ugs or pendant not running
+                        #ifndef BUTTONSTOSERIAL
                         Serial.println("Turn on pendant or UGS.");
+                        #endif
                         lcd.clear();
                         lcd.setCursor(0, 0);
                         lcd.print(lcdMsgTurnOnUGS);
                         lcd.setCursor(0, 1);
                         lcd.print(lcdMsgEnablePendant);
                 }else if(cnc_state[0] == 0 && cnc_state[1] == 0 && cnc_state[2] == 0 && cnc_state[3] == 0) {//PC available, ugs and pendant available, cnc not connected
+                        #ifndef BUTTONSTOSERIAL
                         Serial.println("CNC is not connected to the computer");
+                        #endif
                         lcd.clear();
                         lcd.setCursor(0, 0);
                         lcd.print(lcdMsgCNCNotConnected);
@@ -248,28 +318,49 @@ void displayLCD(){
                         lcd.print(lcdMsgToComputer);
                 }else if(cnc_state[0] == 0 && cnc_state[1] == 0 && cnc_state[2] == 0 && cnc_state[3] == 1) {//PC available, ugs available, arduino (cnc) connected to PC via serial
                         if(cnc_state[4] == 1 && cnc_state[5] == 0 && cnc_state[6] == 0 && cnc_state[7] == 0 && (cnc_state[8] == 1 || cnc_state[9] == 1)) {//Alarms - general or hard limit
+                                #ifdef OLD_PENDANT
                                 if(cnc_state[8] == 1) {
+                                        #ifndef BUTTONSTOSERIAL
                                         Serial.println("Hard Limit Alarm triggered");
+                                        #endif
                                         lcd.clear();
                                         lcd.setCursor(0, 0);
                                         lcd.print(lcdMsgAlarmLimit);
                                         lcd.setCursor(5, 1);
                                         lcd.print(lcdMsgLimitTriggered);
                                 }else if(cnc_state[9] == 1) {
+                                        #ifndef BUTTONSTOSERIAL
                                         Serial.println("General Alarm triggered");
+                                        #endif
                                         lcd.clear();
                                         lcd.setCursor(0, 0);
                                         lcd.print(lcdMsgAlarm);
                                         lcd.setCursor(5, 1);
                                         lcd.print(lcdMsgGeneralError);
                                 }
+                                #endif
+                                #ifdef NEW_BREILERS_PENDANT
+                                if(cnc_state[8] == 1 || cnc_state[9] == 1) {
+                                        #ifndef BUTTONSTOSERIAL
+                                        Serial.println("Alarm triggered");
+                                        #endif
+                                        lcd.clear();
+                                        lcd.setCursor(0, 0);
+                                        lcd.print(lcdMsgAlarmLimit);
+                                        lcd.setCursor(5, 1);
+                                        lcd.print(lcdMsgLimitTriggered);
+                                }
+                                #endif
                         }else if(cnc_state[5] == 0 && cnc_state[6] == 0 && (cnc_state[4] == 1 || cnc_state[7] == 1) && cnc_state[8] == 0 && cnc_state[9] == 0) {//system is idle or jogging
                                 if(cnc_state[4] == 1) {
+                                        #ifndef BUTTONSTOSERIAL
                                         Serial.println("System is idle");
+                                        #endif
                                 }else if(cnc_state[7] == 1) {
+                                        #ifndef BUTTONSTOSERIAL
                                         Serial.println("System is jogging");
+                                        #endif
                                 }
-
                                 if(showLCD == 0) {
                                         lcd.clear();
                                         lcd.setCursor(0, 0);
@@ -307,29 +398,17 @@ void displayLCD(){
                                         lcd.setCursor(5, 1);
                                         lcd.print(machinez);
                                 }else if(showLCD == 6) {
-                                        lcd.clear();
-                                        lcd.setCursor(0, 0);
-                                        lcd.print(lcdMsgFile);
-                                        for(byte i = 0; i < 17; i++) {
-                                                lcd.setCursor(i, 1);
-                                                if(variable[1][i] == 32 || variable[1][i] == 0) {//if empty file, or name is shorter than 16 characters, print space
-                                                        lcd.print(" ");
-                                                }else{
-                                                        lcd.print(variable[1][i]);
-                                                }
-                                        }
-                                }else if(showLCD == 7) {
-                                        if(cnc_state[7] == 0) {//idle
+                                        if(cnc_state[7] == 0) {      //idle
                                                 lcd.clear();
                                                 lcd.setCursor(0, 0);
                                                 lcd.print(lcdMsgWaiting);
                                                 lcd.setCursor(0, 1);
                                                 lcd.print(lcdMsgMakingMeW);
-                                        }else if(cnc_state[7] == 1) {//jogging
+                                        }else if(cnc_state[7] == 1) {      //jogging
                                                 lcd.clear();
                                                 lcd.setCursor(0, 0);
                                                 lcd.print(lcdMsgJogging);
-                                        }else if(cnc_state[10] == 1) {//sleeping
+                                        }else if(cnc_state[10] == 1) {      //sleeping
                                                 lcd.clear();
                                                 lcd.setCursor(0, 0);
                                                 lcd.print(lcdMsgSleeping);
@@ -337,8 +416,13 @@ void displayLCD(){
                                 }
 
                         }else if(cnc_state[4] == 0 && (cnc_state[5] == 1 || cnc_state[6] == 1) && cnc_state[7] == 0) {//system is running a job
+                                #ifndef BUTTONSTOSERIAL
                                 Serial.println("System is running a job");
+                                #endif
                                 if(showLCD == 0) {
+                                        #ifdef NEW_BREILERS_PENDANT
+                                          filenameJson.toCharArray(variable[1],16);
+                                        #endif
                                         lcd.clear();
                                         lcd.setCursor(0, 0);
                                         lcd.print(lcdMsgFile);
@@ -512,7 +596,9 @@ void displayLCD(){
                                 }
                         }
                 }else{//I don't know what is going on
+                        #ifndef BUTTONSTOSERIAL
                         Serial.print("Don't know...");
+                        #endif
                         lcd.clear();
                         lcd.setCursor(0, 0);
                         lcd.print(lcdMsgSomethingWentWrong);
