@@ -9,7 +9,7 @@
 #include "src/LiquidCrystal_I2C/LiquidCrystal_I2C.h"
 #include "src/ArduinoJson-6.x/ArduinoJson.h"
 
-#define  pendatVersion  1.20
+#define  pendatVersion  1.21
 
 LiquidCrystal_I2C lcd(0x3F, 16, 2);
 #define resetPinD5 16 //D0
@@ -166,6 +166,7 @@ unsigned int oldButtonValues;
 #define   GETtogglecheckmode        "$C"
 #define   GETtoggleLaser2On         "$32=1"
 #define   GETtoggleLaser2Off        "$32=0"
+#define   GETtoggleLaser            GETtoggleLaser2On
 #define   GETspindleON              "M8"
 #define   GETspindleOFF             "M9"
 #define   GETlaserTestPower         "M4 S0.8" //Run test as M04 Sxx (xx are laserTestStrength) - this will only turn on laser, but not fire it yet, since G1 command is not issued

@@ -455,10 +455,10 @@ void zAxisProbe(){
 void readUGSPendant(){
         String getFull = "http://" + webserver + ":" + webserverport + GETsystemState;
         HTTPClient http;         //Declare object of class HTTPClient
-        int returnCode;
-        http.begin(getUrl);
-        returnCode = http.GET();
-        payload = http.getString();         //Get the response payload
+        int httpCode;
+        http.begin(getFull);
+        httpCode = http.GET();
+        String payload = http.getString();         //Get the response payload
         //Serial.println(payload);    //Print request response payload
         http.end();         //Close connection
         if(httpCode < 0) {//No connection to cnc
@@ -585,7 +585,6 @@ void connectCNC(){
         HTTPClient http;
 
         #ifdef NEW_BREILERS_PENDANT
-        HTTPClient http;
         String postUrl = "http://" + webserver + ":" + webserverport + POSTSelectUSBPort + USBport;
         http.begin(postUrl);
         http.addHeader("content-type","application/json");

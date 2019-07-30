@@ -1,3 +1,8 @@
+# 1.21 - 31.7.2019
+* Small bug fixes.
+* Removed chosen file name on LCD.
+* Showing progress % was accidentally removed in previous build. Now it works.
+
 # 1.20 - 8.7.2019
 * This is a big one, guys! Added support for New Mr. Breiler's Pendant via Wifi.
 * Also! Added support for New Pendant, BUT VIA USB! So This Wifi Pendant takes data via wifi, still has IFTTT messaging but commands are sent via USB cable. Since ESP cannot act as keyboard I managed a bodge - Powershell script (serialToUGS.ps1) that runs in a back that listens Wifi Pendant COM port and converts Serial Commands to localhost web requests. So Wifi Pendant should still run in a background. Since this are localhost requests commands are quicker, more reliable even if Pendant doesn't have the best wifi signal.

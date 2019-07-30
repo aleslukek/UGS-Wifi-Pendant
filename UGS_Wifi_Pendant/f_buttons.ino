@@ -145,6 +145,7 @@ void buttons(){
                                 displayLCD();
                                 if(enableResetPhyPin != true){
                                         getCommandGeneral(GETsoftreset);//run soft reset twice (toggle check mode twice resets the grbl)
+                                        delay(500); //this is there just so it only presses button once.
 
                                 }else if(cnc_state[8] == 1 && cnc_state[5] != 1 && cnc_state[3] == 1 && enableResetPhyPin == true) { //if hard limit is triggered, job not running and arduino is available
                                         physicalReset(); //D5 to low that resets grbl reset physical pin

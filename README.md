@@ -11,7 +11,7 @@ When the job is done it can send a notification via IFTTT.com.
 
 OTA updates via local network (tested via Arduino IDE)!
 
-It uses LCD to output CNC data, such as machine position, work position, job duration, job time remaining, job sent rows, total rows, progress, file selected, errors and things like that.
+It uses LCD to output CNC data, such as machine position, work position, job duration, job time remaining, job sent rows, total rows, progress, errors and things like that.
 
 When job is running most of the buttons are disabled. Only pause, cancel and toggles are working. So you can't accidentally send commands that have nothing to do with job running.
 

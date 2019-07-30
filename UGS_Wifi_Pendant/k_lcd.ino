@@ -420,39 +420,24 @@ void displayLCD(){
                                 Serial.println("System is running a job");
                                 #endif
                                 if(showLCD == 0) {
-                                        #ifdef NEW_BREILERS_PENDANT
-                                          filenameJson.toCharArray(variable[1],16);
-                                        #endif
-                                        lcd.clear();
-                                        lcd.setCursor(0, 0);
-                                        lcd.print(lcdMsgFile);
-                                        for(byte i = 0; i < 17; i++) {
-                                                lcd.setCursor(i, 1);
-                                                if(variable[1][i] == 32 || variable[1][i] == 0) {//if empty file, or name is shorter than 16 characters, print space
-                                                        lcd.print(" ");
-                                                }else{
-                                                        lcd.print(variable[1][i]);
-                                                }
-                                        }
-                                }else if(showLCD == 1) {
                                         lcd.clear();
                                         lcd.setCursor(0, 0);
                                         lcd.print(lcdMsgAllR);
                                         lcd.setCursor(5, 1);
                                         lcd.print(rowsInFile);
-                                }else if(showLCD == 2) {
+                                }else if(showLCD == 1) {
                                         lcd.clear();
                                         lcd.setCursor(0, 0);
                                         lcd.print(lcdMsgSentR);
                                         lcd.setCursor(5, 1);
                                         lcd.print(sentRows);
-                                }else if(showLCD == 3) {
+                                }else if(showLCD == 2) {
                                         lcd.clear();
                                         lcd.setCursor(0, 0);
                                         lcd.print(lcdMsgRemainingR);
                                         lcd.setCursor(5, 1);
                                         lcd.print(remainingRows);
-                                }else if(showLCD == 4) {
+                                }else if(showLCD == 3) {
                                         lcd.clear();
                                         lcd.setCursor(0, 0);
                                         lcd.print(lcdMsgRemainingT);
@@ -512,7 +497,7 @@ void displayLCD(){
                                                 }
                                         }
 
-                                }else if(showLCD == 5) {
+                                }else if(showLCD == 4) {
                                         lcd.clear();
                                         lcd.setCursor(0, 0);
                                         lcd.print(lcdMsgDuration);
@@ -571,7 +556,7 @@ void displayLCD(){
                                                 lcd.setCursor(11,1);
                                                 lcd.print(seconds);
                                         }
-                                }else if(showLCD == 6) {
+                                }else if(showLCD == 5) {
                                         if(cnc_state[5] == 1) {
                                                 lcd.clear();
                                                 lcd.setCursor(0, 0);
@@ -585,7 +570,7 @@ void displayLCD(){
                                                 lcd.setCursor(0, 1);
                                                 lcd.print(lcdMsgCurrPause);
                                         }
-                                }else if(showLCD == 7) {
+                                }else if(showLCD == 6) {
                                         lcd.clear();
                                         lcd.setCursor(0, 0);
                                         lcd.print(lcdMsgProgress);
